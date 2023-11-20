@@ -5,11 +5,11 @@
         "answer": [
             [
                 0,
-                "#变速器##富勒RT11509C型变速箱的结构###中间轴结构**富勒双中间轴九档变速器的主、副变速器均采用两根结构完全一样的中间 轴，相间 180°。动力从输入轴输入后，分流到两根中间轴上，然后汇集"
+                "变速器#富勒RT11509C型变速箱的结构##中间轴结构**富勒双中间轴九档变速器的主、副变速器均采用两根结构完全一样的中间\n轴，相间 180°。动力从输入轴输入后，分流到两根中间轴上，然后汇集到主轴"
             ]
         ],
-        "source": "/home/star/projects/chat_doc/knowledge_base/lb_test/content/陕汽-新M3000S维修手册 第二部分.pdf",
-        "len": 530
+        "source": "/home/cc007/cc/Langchain-Chatchat/knowledge_base/test/content/陕汽-新M3000S维修手册 第二部分.pdf",
+        "len": 531
     },
     {
         "page": 3,
@@ -17,11 +17,11 @@
         "answer": [
             [
                 0,
-                "#变速器##富勒RT11509C型变速箱的结构###中间轴结构**富勒双中间轴九档变速器的主、副变速器均采用两根结构完全一样的中间 轴，相间 180°。动力从输入轴输入后，分流到两根中间轴上，然后汇集"
+                "变速器#富勒RT11509C型变速箱的结构##取力机构：**\n1高档摩擦带\n2高档同步环\n3滑动齿套\n4高档锁止销\n5低档摩擦带\n6低档锥环 7低档锁止销\n8弹簧\n图 26 同步器总成\n[6]\n图 2"
             ]
         ],
-        "source": "/home/star/projects/chat_doc/knowledge_base/lb_test/content/陕汽-新M3000S维修手册 第二部分.pdf",
-        "len": 530
+        "source": "/home/cc007/cc/Langchain-Chatchat/knowledge_base/test/content/陕汽-新M3000S维修手册 第二部分.pdf",
+        "len": 353
     },
     {
         "page": 4,
@@ -29,11 +29,11 @@
         "answer": [
             [
                 0,
-                "#变速器##富勒RT11509C型变速箱的结构###“对齿”及对齿程序**为了解决双中间轴齿轮与主轴齿轮的正确啮合，必须“对齿”。 所谓“对齿”，即组装变速器时，将两根中间轴传动齿轮上印有标记的轮齿 "
+                "变速器#富勒RT11509C型变速箱的结构##“对齿”及对齿程序**为了解决双中间轴齿轮与主轴齿轮的正确啮合，必须“对齿”。\n所谓“对齿”，即组装变速器时，将两根中间轴传动齿轮上印有标记的轮齿\n分别插"
             ]
         ],
-        "source": "/home/star/projects/chat_doc/knowledge_base/lb_test/content/陕汽-新M3000S维修手册 第二部分.pdf",
-        "len": 428
+        "source": "/home/cc007/cc/Langchain-Chatchat/knowledge_base/test/content/陕汽-新M3000S维修手册 第二部分.pdf",
+        "len": 425
     },
     {
         "page": 5,
@@ -41,11 +41,11 @@
         "answer": [
             [
                 0,
-                "#变速器##富勒RT11509C型变速箱的结构###双H操纵机构**操纵手球位置如图 24 所示。 在双 H 操纵机构中，1234 及 RC 档在低档区，5678 档在高档区。 1．双 H 换向阀 2"
+                "变速器#富勒RT11509C型变速箱的结构##双H操纵机构**操纵手球位置如图 24 所示。\n在双 H 操纵机构中，1234 及 RC 档在低档区，5678 档在高档区。\n1．双 H 换向阀 26 范"
             ]
         ],
-        "source": "/home/star/projects/chat_doc/knowledge_base/lb_test/content/陕汽-新M3000S维修手册 第二部分.pdf",
-        "len": 341
+        "source": "/home/cc007/cc/Langchain-Chatchat/knowledge_base/test/content/陕汽-新M3000S维修手册 第二部分.pdf",
+        "len": 342
     },
     {
         "page": 6,
@@ -53,11 +53,11 @@
         "answer": [
             [
                 0,
-                "#变速器##富勒RT11509C型变速箱的结构###同步器构造**在富勒双中间轴九档变速 器的副变速器内装有锁销式惯 性同步器。它由副箱换档气缸 来操纵。仅在高、低档位段变 化时才使用(即从高档区换向"
+                "变速器#富勒RT11509C型变速箱的结构##同步器构造**在富勒双中间轴九档变速\n器的副变速器内装有锁销式惯\n性同步器。它由副箱换档气缸\n来操纵。仅在高、低档位段变\n化时才使用(即从高档区换向\n低档"
             ]
         ],
-        "source": "/home/star/projects/chat_doc/knowledge_base/lb_test/content/陕汽-新M3000S维修手册 第二部分.pdf",
-        "len": 319
+        "source": "/home/cc007/cc/Langchain-Chatchat/knowledge_base/test/content/陕汽-新M3000S维修手册 第二部分.pdf",
+        "len": 316
     },
     {
         "page": 100,
@@ -65,11 +65,11 @@
         "answer": [
             [
                 0,
-                "#车桥##单级减速驱动双联桥###单级减速双联桥结构**单级减速双联桥的轮边结构与上面介绍的单级减速单后桥的完全相同，除 了半轴等部分零件有一定的区别之外，其余大部分零件均可互换。 双联桥的后桥结构与"
+                "车桥#单级减速驱动双联桥##单级减速双联桥结构** 37半轴齿轮 38定位肖 39十字半轴 40轴承\n瓦盖 41锁止开口肖 42瓦盖螺栓 43行星齿轮 44行星齿轮垫片 45轴承瓦\n盖 46十字通轴 "
             ]
         ],
-        "source": "/home/star/projects/chat_doc/knowledge_base/lb_test/content/陕汽-新M3000S维修手册 第二部分.pdf",
-        "len": 5020
+        "source": "/home/cc007/cc/Langchain-Chatchat/knowledge_base/test/content/陕汽-新M3000S维修手册 第二部分.pdf",
+        "len": 1075
     },
     {
         "page": 100,
@@ -77,11 +77,11 @@
         "answer": [
             [
                 0,
-                "#车桥##单级减速驱动双联桥###单级减速双联桥结构**单级减速双联桥的轮边结构与上面介绍的单级减速单后桥的完全相同，除 了半轴等部分零件有一定的区别之外，其余大部分零件均可互换。 双联桥的后桥结构与"
+                "车桥#单级减速驱动双联桥##单级减速双联桥结构**生磨轮胎和损坏机件的故障。在轴间差速器\n上也设置有差速锁装置，当汽车行驶在光滑或泥泞路面，而使中桥或后桥整体打\n滑空转时，驾驶人员可按下轴间差速锁开关"
             ]
         ],
-        "source": "/home/star/projects/chat_doc/knowledge_base/lb_test/content/陕汽-新M3000S维修手册 第二部分.pdf",
-        "len": 5020
+        "source": "/home/cc007/cc/Langchain-Chatchat/knowledge_base/test/content/陕汽-新M3000S维修手册 第二部分.pdf",
+        "len": 1075
     },
     {
         "page": 20,
@@ -89,11 +89,11 @@
         "answer": [
             [
                 0,
-                "#车桥##55吨级MAN技术前桥###前轴分解：** 1开口销 2槽形螺母 3蝶形弹簧 4橡胶圈 5防尘罩 6横拉杆接头 7开口销 8螺栓 9上球座 10球头销 11下球座 12弹簧 13螺塞 14开"
+                "车桥#55吨级MAN技术前桥##前轴分解：**横拉杆臂。\n在进行这项作业时，将横拉杆臂与横拉\n杆总成同时一起拿下来；\n[19]\n·拆除制动器总成固定螺栓；\n·从转向节上向外分离拿下制动器总成，\n此时要"
             ]
         ],
-        "source": "/home/star/projects/chat_doc/knowledge_base/lb_test/content/陕汽-新M3000S维修手册 第二部分.pdf",
-        "len": 1569
+        "source": "/home/cc007/cc/Langchain-Chatchat/knowledge_base/test/content/陕汽-新M3000S维修手册 第二部分.pdf",
+        "len": 674
     },
     {
         "page": 24,
@@ -101,11 +101,11 @@
         "answer": [
             [
                 0,
-                "#车桥##55吨级MAN技术前桥###前轴分解：** 1开口销 2槽形螺母 3蝶形弹簧 4橡胶圈 5防尘罩 6横拉杆接头 7开口销 8螺栓 9上球座 10球头销 11下球座 12弹簧 13螺塞 14开"
+                "车桥#55吨级MAN技术前桥##前轴分解：**横拉杆臂。\n在进行这项作业时，将横拉杆臂与横拉\n杆总成同时一起拿下来；\n[19]\n·拆除制动器总成固定螺栓；\n·从转向节上向外分离拿下制动器总成，\n此时要"
             ]
         ],
-        "source": "/home/star/projects/chat_doc/knowledge_base/lb_test/content/陕汽-新M3000S维修手册 第二部分.pdf",
-        "len": 1569
+        "source": "/home/cc007/cc/Langchain-Chatchat/knowledge_base/test/content/陕汽-新M3000S维修手册 第二部分.pdf",
+        "len": 674
     },
     {
         "page": 32,
@@ -113,11 +113,11 @@
         "answer": [
             [
                 0,
-                "#车桥##55吨级MAN技术前桥###重新装配** 1轮毂螺栓 2弹簧垫圈 3轮毂螺栓 4轮毂 5衬套 6轮毂轴承盖 7槽形调整螺母 8开口销 9转向节 10调整垫圈 11外轴承 12制动鼓 13槽形"
+                "车桥#55吨级MAN技术前桥##重新装配**·m 的力矩拧紧，\n如果槽和孔未对齐，缓慢拧紧螺母（不准反拧\n放松螺母），直到能穿过开口销。\n10、3 装复轮毂\n1） 装复制动器总成。\n·在转向节上部放上"
             ]
         ],
-        "source": "/home/star/projects/chat_doc/knowledge_base/lb_test/content/陕汽-新M3000S维修手册 第二部分.pdf",
-        "len": 2359
+        "source": "/home/cc007/cc/Langchain-Chatchat/knowledge_base/test/content/陕汽-新M3000S维修手册 第二部分.pdf",
+        "len": 1072
     },
     {
         "page": 109,
@@ -125,11 +125,11 @@
         "answer": [
             [
                 0,
-                "#车桥##单级减速驱动双联桥###单级减速双联桥的拆装**双联桥的轮边结构与单桥轮边完全相同，其拆、装程序可完全参照HD450和 HD485桥介绍的执行，这里就不再复述了。 (一)单级减速双联桥后桥的"
+                "车桥#单级减速驱动双联桥##单级减速双联桥的拆装**锥齿轮前支承轴承，可将轴承内圈加热至 120～150℃后压\n入锥齿轮前轴端。\n1凸缘螺母2被动圆柱齿轮3主动锥齿轮轴外侧轴承内圈4主动锥齿轮轴\n外侧"
             ]
         ],
-        "source": "/home/star/projects/chat_doc/knowledge_base/lb_test/content/陕汽-新M3000S维修手册 第二部分.pdf",
-        "len": 5720
+        "source": "/home/cc007/cc/Langchain-Chatchat/knowledge_base/test/content/陕汽-新M3000S维修手册 第二部分.pdf",
+        "len": 1076
     },
     {
         "page": 5,
@@ -137,11 +137,11 @@
         "answer": [
             [
                 0,
-                "#变速器##富勒RT11509C型变速箱的结构###双H操纵机构**操纵手球位置如图 24 所示。 在双 H 操纵机构中，1234 及 RC 档在低档区，5678 档在高档区。 1．双 H 换向阀 2"
+                "变速器#富勒RT11509C型变速箱的结构##双H操纵机构**操纵手球位置如图 24 所示。\n在双 H 操纵机构中，1234 及 RC 档在低档区，5678 档在高档区。\n1．双 H 换向阀 26 范"
             ]
         ],
-        "source": "/home/star/projects/chat_doc/knowledge_base/lb_test/content/陕汽-新M3000S维修手册 第二部分.pdf",
-        "len": 341
+        "source": "/home/cc007/cc/Langchain-Chatchat/knowledge_base/test/content/陕汽-新M3000S维修手册 第二部分.pdf",
+        "len": 342
     },
     {
         "page": 6,
@@ -149,11 +149,11 @@
         "answer": [
             [
                 0,
-                "#变速器##富勒RT11509C型变速箱的结构###中间轴(副轴)制动器**中间轴制动器也称副轴制动器或者离合器制动器，装在主变速器壳体的右侧 (向汽车前进方向看)。其构造如图 27。 中间轴制动器是"
+                "变速器#富勒RT11509C型变速箱的结构##中间轴(副轴)制动器**中间轴制动器也称副轴制动器或者离合器制动器，装在主变速器壳体的右侧\n(向汽车前进方向看)。其构造如图 27。\n中间轴制动器是一种操"
             ]
         ],
-        "source": "/home/star/projects/chat_doc/knowledge_base/lb_test/content/陕汽-新M3000S维修手册 第二部分.pdf",
-        "len": 342
+        "source": "/home/cc007/cc/Langchain-Chatchat/knowledge_base/test/content/陕汽-新M3000S维修手册 第二部分.pdf",
+        "len": 339
     },
     {
         "page": 8,
@@ -161,11 +161,11 @@
         "answer": [
             [
                 0,
-                "#变速器##富勒变速箱常见故障的排除**富勒变速箱常见的故障以及排除方法如下： 1换档困难 一般对刚接触装有富勒变速箱的汽车时，常反映该车起步不好挂档。这往往 是没有阅读使用说明，或没有经过培训，不了"
+                "变速器#富勒变速箱常见故障的排除**啮合套或齿轮。变速箱的一轴如果与飞轮轴孔内导向轴承不同心也易造成\n掉档故障。当然变速箱盖上变速轨定位凹合磨损，档位锁销磨损、弹簧失效等都\n会造成掉档故障。由于远距离"
             ]
         ],
-        "source": "/home/star/projects/chat_doc/knowledge_base/lb_test/content/陕汽-新M3000S维修手册 第二部分.pdf",
-        "len": 3821
+        "source": "/home/cc007/cc/Langchain-Chatchat/knowledge_base/test/content/陕汽-新M3000S维修手册 第二部分.pdf",
+        "len": 1068
     },
     {
         "page": 8,
@@ -173,11 +173,11 @@
         "answer": [
             [
                 0,
-                "#变速器##富勒变速箱常见故障的排除**富勒变速箱常见的故障以及排除方法如下： 1换档困难 一般对刚接触装有富勒变速箱的汽车时，常反映该车起步不好挂档。这往往 是没有阅读使用说明，或没有经过培训，不了"
+                "变速器#富勒变速箱常见故障的排除**啮合套或齿轮。变速箱的一轴如果与飞轮轴孔内导向轴承不同心也易造成\n掉档故障。当然变速箱盖上变速轨定位凹合磨损，档位锁销磨损、弹簧失效等都\n会造成掉档故障。由于远距离"
             ]
         ],
-        "source": "/home/star/projects/chat_doc/knowledge_base/lb_test/content/陕汽-新M3000S维修手册 第二部分.pdf",
-        "len": 3821
+        "source": "/home/cc007/cc/Langchain-Chatchat/knowledge_base/test/content/陕汽-新M3000S维修手册 第二部分.pdf",
+        "len": 1068
     },
     {
         "page": 11,
@@ -185,11 +185,11 @@
         "answer": [
             [
                 0,
-                "#变速器##富勒变速箱的使用与保养** 由于富勒变速箱结构特点决定在使用与保养方面应注意它独有的要求。 1使用与保养 首先在操作上应注意起步步挂档的要求。由于离合器制动器的存在。要求在 起步挂档前离合"
+                "变速器#富勒变速箱的使用与保养**\n由于富勒变速箱结构特点决定在使用与保养方面应注意它独有的要求。\n1使用与保养\n首先在操作上应注意起步步挂档的要求。由于离合器制动器的存在。要求在\n起步挂档前离合器踏"
             ]
         ],
-        "source": "/home/star/projects/chat_doc/knowledge_base/lb_test/content/陕汽-新M3000S维修手册 第二部分.pdf",
-        "len": 919
+        "source": "/home/cc007/cc/Langchain-Chatchat/knowledge_base/test/content/陕汽-新M3000S维修手册 第二部分.pdf",
+        "len": 927
     },
     {
         "page": 12,
@@ -197,11 +197,11 @@
         "answer": [
             [
                 0,
-                "#变速器##富勒变速箱的使用与保养** 由于富勒变速箱结构特点决定在使用与保养方面应注意它独有的要求。 1使用与保养 首先在操作上应注意起步步挂档的要求。由于离合器制动器的存在。要求在 起步挂档前离合"
+                "变速器#富勒变速箱的使用与保养**\n由于富勒变速箱结构特点决定在使用与保养方面应注意它独有的要求。\n1使用与保养\n首先在操作上应注意起步步挂档的要求。由于离合器制动器的存在。要求在\n起步挂档前离合器踏"
             ]
         ],
-        "source": "/home/star/projects/chat_doc/knowledge_base/lb_test/content/陕汽-新M3000S维修手册 第二部分.pdf",
-        "len": 919
+        "source": "/home/cc007/cc/Langchain-Chatchat/knowledge_base/test/content/陕汽-新M3000S维修手册 第二部分.pdf",
+        "len": 927
     },
     {
         "page": 14,
@@ -209,11 +209,11 @@
         "answer": [
             [
                 0,
-                "#车桥##55吨级MAN技术前桥###维修标准：**项 目 名义尺寸 （mm） 维修标准 （mm） 修理极限 （mm） 磨损极限 （mm） 备注 主销外径 ￠470 — — ￠469 主销与转向节衬套"
+                "车桥#10吨级单级减速驱动后桥##单级减速后桥的结构特点：**5 型单级减速后桥主减速器\n1密封圈 2螺钉 34防尘罩 5制动底板固定螺栓 6制动底板 7\n制动蹄肖 8蹄肖锁片 9锁片螺钉 10自锁螺"
             ]
         ],
-        "source": "/home/star/projects/chat_doc/knowledge_base/lb_test/content/陕汽-新M3000S维修手册 第二部分.pdf",
-        "len": 300
+        "source": "/home/cc007/cc/Langchain-Chatchat/knowledge_base/test/content/陕汽-新M3000S维修手册 第二部分.pdf",
+        "len": 942
     },
     {
         "page": 16,
@@ -221,11 +221,11 @@
         "answer": [
             [
                 0,
-                "#车桥##55吨级MAN技术前桥###拧紧力矩：**项 目 拧紧力矩（N·m） 钢板弹簧 U 形螺栓 350 ～400 主销的锁销螺母 25 ～40 转向节限位螺栓锁止螺母 80 ～100 转向节臂固"
+                "车桥#55吨级MAN技术前桥##拧紧力矩：**项 目\n拧紧力矩（N·m）\n钢板弹簧 U 形螺栓\n350 ～400\n主销的锁销螺母\n25 ～40\n转向节限位螺栓锁止螺母\n80 ～100\n转向节臂固定螺母"
             ]
         ],
-        "source": "/home/star/projects/chat_doc/knowledge_base/lb_test/content/陕汽-新M3000S维修手册 第二部分.pdf",
-        "len": 294
+        "source": "/home/cc007/cc/Langchain-Chatchat/knowledge_base/test/content/陕汽-新M3000S维修手册 第二部分.pdf",
+        "len": 296
     },
     {
         "page": 17,
@@ -233,11 +233,11 @@
         "answer": [
             [
                 0,
-                "#车桥##55吨级MAN技术前桥###技术参数：**前轴型式 I 字形断面横锻钢梁 转向节型式 拳式 主销外径 ￠47mm 制动鼓安装型式 轮毂外侧"
+                "车桥#55吨级MAN技术前桥##技术参数：**前轴型式\nI 字形断面横锻钢梁\n转向节型式\n拳式\n主销外径\n￠47mm\n制动鼓安装型式\n轮毂外侧"
             ]
         ],
-        "source": "/home/star/projects/chat_doc/knowledge_base/lb_test/content/陕汽-新M3000S维修手册 第二部分.pdf",
-        "len": 74
+        "source": "/home/cc007/cc/Langchain-Chatchat/knowledge_base/test/content/陕汽-新M3000S维修手册 第二部分.pdf",
+        "len": 71
     },
     {
         "page": 20,
@@ -245,11 +245,11 @@
         "answer": [
             [
                 0,
-                "#车桥##55吨级MAN技术前桥###前轴分解：** 1开口销 2槽形螺母 3蝶形弹簧 4橡胶圈 5防尘罩 6横拉杆接头 7开口销 8螺栓 9上球座 10球头销 11下球座 12弹簧 13螺塞 14开"
+                "车桥#55吨级MAN技术前桥##前轴分解：**横拉杆臂。\n在进行这项作业时，将横拉杆臂与横拉\n杆总成同时一起拿下来；\n[19]\n·拆除制动器总成固定螺栓；\n·从转向节上向外分离拿下制动器总成，\n此时要"
             ]
         ],
-        "source": "/home/star/projects/chat_doc/knowledge_base/lb_test/content/陕汽-新M3000S维修手册 第二部分.pdf",
-        "len": 1569
+        "source": "/home/cc007/cc/Langchain-Chatchat/knowledge_base/test/content/陕汽-新M3000S维修手册 第二部分.pdf",
+        "len": 674
     },
     {
         "page": 26,
@@ -257,11 +257,11 @@
         "answer": [
             [
                 0,
-                "#车桥##55吨级MAN技术前桥###拧紧力矩：**项 目 拧紧力矩（N·m） 钢板弹簧 U 形螺栓 350 ～400 主销的锁销螺母 25 ～40 转向节限位螺栓锁止螺母 80 ～100 转向节臂固"
+                "车桥#55吨级MAN技术前桥##拧紧力矩：**项 目\n拧紧力矩（N·m）\n钢板弹簧 U 形螺栓\n350 ～400\n主销的锁销螺母\n25 ～40\n转向节限位螺栓锁止螺母\n80 ～100\n转向节臂固定螺母"
             ]
         ],
-        "source": "/home/star/projects/chat_doc/knowledge_base/lb_test/content/陕汽-新M3000S维修手册 第二部分.pdf",
-        "len": 294
+        "source": "/home/cc007/cc/Langchain-Chatchat/knowledge_base/test/content/陕汽-新M3000S维修手册 第二部分.pdf",
+        "len": 296
     },
     {
         "page": 28,
@@ -269,11 +269,11 @@
         "answer": [
             [
                 0,
-                "#车桥##55吨级MAN技术前桥###重新装配** 1轮毂螺栓 2弹簧垫圈 3轮毂螺栓 4轮毂 5衬套 6轮毂轴承盖 7槽形调整螺母 8开口销 9转向节 10调整垫圈 11外轴承 12制动鼓 13槽形"
+                "车桥#55吨级MAN技术前桥##重新装配**·m 的力矩拧紧，\n如果槽和孔未对齐，缓慢拧紧螺母（不准反拧\n放松螺母），直到能穿过开口销。\n10、3 装复轮毂\n1） 装复制动器总成。\n·在转向节上部放上"
             ]
         ],
-        "source": "/home/star/projects/chat_doc/knowledge_base/lb_test/content/陕汽-新M3000S维修手册 第二部分.pdf",
-        "len": 2359
+        "source": "/home/cc007/cc/Langchain-Chatchat/knowledge_base/test/content/陕汽-新M3000S维修手册 第二部分.pdf",
+        "len": 1072
     },
     {
         "page": 32,
@@ -281,11 +281,11 @@
         "answer": [
             [
                 0,
-                "#车桥##10吨级和13吨级MAN双级减速驱动桥###中桥主减速器拆装**1．拆卸过桥箱盖 排出润滑油 注意：即使桥处在安装状态下也可以拆卸过桥箱盖。拆下两个过桥箱盖上的螺栓，用导向销 插到两孔中。拆"
+                "车桥#55吨级MAN技术前桥##重新装配**·m 的力矩拧紧，\n如果槽和孔未对齐，缓慢拧紧螺母（不准反拧\n放松螺母），直到能穿过开口销。\n10、3 装复轮毂\n1） 装复制动器总成。\n·在转向节上部放上"
             ]
         ],
-        "source": "/home/star/projects/chat_doc/knowledge_base/lb_test/content/陕汽-新M3000S维修手册 第二部分.pdf",
-        "len": 2919
+        "source": "/home/cc007/cc/Langchain-Chatchat/knowledge_base/test/content/陕汽-新M3000S维修手册 第二部分.pdf",
+        "len": 1072
     },
     {
         "page": 36,
@@ -293,11 +293,11 @@
         "answer": [
             [
                 0,
-                "#车桥##55吨级MAN技术前桥###重新装配** 1轮毂螺栓 2弹簧垫圈 3轮毂螺栓 4轮毂 5衬套 6轮毂轴承盖 7槽形调整螺母 8开口销 9转向节 10调整垫圈 11外轴承 12制动鼓 13槽形"
+                "车桥#55吨级MAN技术前桥##重新装配**，那么继续回松螺塞，直到\n能穿过开口销为止，装好开口销。\n注意：必须从车辆前后方向插入开口销。\n3） 将横拉杆和接头连接螺纹都涂上\n润滑脂。把左右接头装到横"
             ]
         ],
-        "source": "/home/star/projects/chat_doc/knowledge_base/lb_test/content/陕汽-新M3000S维修手册 第二部分.pdf",
-        "len": 2359
+        "source": "/home/cc007/cc/Langchain-Chatchat/knowledge_base/test/content/陕汽-新M3000S维修手册 第二部分.pdf",
+        "len": 468
     },
     {
         "page": 38,
@@ -305,11 +305,11 @@
         "answer": [
             [
                 0,
-                "#车桥##55吨级MAN技术前桥###前轮定位**11、1 与前轮定位有关的因素 1） 把车辆停放在结实平坦的地面上。 2） 按所规定的气压给轮胎充气。 标准气压 690kPa 3） 检查所有的轮胎磨"
+                "车桥#55吨级MAN技术前桥##前轮定位**测量主销后倾角和内倾角\n1） 测量车轮外倾角后，缓慢转动方向盘，使\n车轮转角从零件转到 20°后。将气泡中标\n尺和后倾角标尺的零点对好。\n2） 当转动了 2"
             ]
         ],
-        "source": "/home/star/projects/chat_doc/knowledge_base/lb_test/content/陕汽-新M3000S维修手册 第二部分.pdf",
-        "len": 1732
+        "source": "/home/cc007/cc/Langchain-Chatchat/knowledge_base/test/content/陕汽-新M3000S维修手册 第二部分.pdf",
+        "len": 816
     },
     {
         "page": 42,
@@ -317,10 +317,10 @@
         "answer": [
             [
                 0,
-                "#车桥##10吨级单级减速驱动后桥###单级减速后桥的装配**(一)单级减速后桥轮边的装配 1用专用工具将衬套，密封圈压入凸轮轴支承座内，要保证密封圈压入 05 毫米深。 2用涂有螺纹锁固胶的螺栓，以"
+                "车桥#10吨级单级减速驱动后桥##单级减速后桥的结构特点：**\n半轴和差速器总成联成一个整体，从而使汽车驶出故障路面。\nHD450型驱动桥没有设置差速锁装置，在HD485驱动桥上差速锁装置也是选\n装件"
             ]
         ],
-        "source": "/home/star/projects/chat_doc/knowledge_base/lb_test/content/陕汽-新M3000S维修手册 第二部分.pdf",
-        "len": 6306
+        "source": "/home/cc007/cc/Langchain-Chatchat/knowledge_base/test/content/陕汽-新M3000S维修手册 第二部分.pdf",
+        "len": 1081
     }
 ]

@@ -235,11 +235,11 @@ class KBService(ABC):
             for doc in docs:
                 doc.metadata.setdefault("source", kb_file.filepath)
         else:
-            # docs = kb_file.file2text()
-            chapters = extract_text_from_pdf(kb_file.filepath)
-            docs = [Document(text) for text in chapters]
-            for doc in docs:
-                doc.metadata.setdefault("source", kb_file.filepath)
+            docs = kb_file.file2text()
+            # chapters = extract_text_from_pdf(kb_file.filepath)
+            # docs = [Document(text) for text in chapters]
+            # for doc in docs:
+            #     doc.metadata.setdefault("source", kb_file.filepath)
             custom_docs = False
 
         if docs:
