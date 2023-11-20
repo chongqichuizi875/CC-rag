@@ -1,0 +1,9 @@
+logs/*.log
+**/*.*.pyc
+*.pyc
+**/__pycache__
+configs/__pycache__/__init__.cpython-38.pyc
+__pycache__/
+logs/openai_api.log
+logs/openai_api.log
+logs/openai_api.log.2023-11-18

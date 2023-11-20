@@ -151,7 +151,7 @@ MODEL_PATH = {
 
     "llm_model": {
         # 以下部分模型并未完全测试，仅根据fastchat和vllm模型的模型列表推定支持
-        'cc-13b-chat':'cc-13b-v1-1',
+        'cc-13b-chat':'cc-13b-v1-3',
         "chatglm2-6b": "THUDM/chatglm2-6b",
         "chatglm2-6b-32k": "THUDM/chatglm2-6b-32k",
 
@@ -159,8 +159,8 @@ MODEL_PATH = {
         "baichuan2-7b": "baichuan-inc/Baichuan2-7B-Chat",
 
         "baichuan-7b": "baichuan-inc/Baichuan-7B",
-        "baichuan-13b": "baichuan-inc/Baichuan-13B",
-        'baichuan-13b-chat': 'baichuan-inc/Baichuan-13B-Chat',
+        "baichuan-13b": "Baichuan2-13B-Base",
+        # 'cc-13b-chat': 'Baichuan2-13B-Chat',
 
         "aquila-7b": "BAAI/Aquila-7B",
         "aquilachat-7b": "BAAI/AquilaChat-7B",

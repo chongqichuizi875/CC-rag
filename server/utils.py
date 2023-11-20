@@ -14,6 +14,13 @@ from langchain.llms import OpenAI, AzureOpenAI, Anthropic
 import httpx
 from typing import Literal, Optional, Callable, Generator, Dict, Any, Awaitable, Union
 
+from transformers import AutoModelForCausalLM, AutoTokenizer,pipeline
+from transformers.generation.utils import GenerationConfig
+from langchain.llms import HuggingFacePipeline
+
+
+local_llm = None
+
 
 async def wrap_done(fn: Awaitable, event: asyncio.Event):
     """Wrap an awaitable with a event to signal when it's done or an exception is raised."""
@@ -40,7 +47,6 @@ def get_ChatOpenAI(
 ) -> ChatOpenAI:
     ## 以下模型是Langchain原生支持的模型，这些模型不会走Fschat封装
     config_models = list_config_llm_models()
-
     ## 非Langchain原生支持的模型，走Fschat封装
     config = get_model_worker_config(model_name)
     model = ChatOpenAI(
@@ -55,8 +61,38 @@ def get_ChatOpenAI(
         openai_proxy=config.get("openai_proxy"),
         **kwargs
     )
-
     return model
+    
+    # global local_llm
+    # if local_llm is None:
+    #     model_path = "/mnt/ddata/models/CC-baichuan2-13b"
+    #     model = AutoModelForCausalLM.from_pretrained(
+    #         model_path,
+    #         device_map="auto",
+    #         load_in_8bit=True ,
+    #         trust_remote_code=True
+    #         )
+    #     # .quantize(4).cuda()
+    #     model.generation_config = GenerationConfig.from_pretrained(
+    #         model_path
+    #     )
+    #     tokenizer = AutoTokenizer.from_pretrained(
+    #         model_path,
+    #         use_fast=False,
+    #         trust_remote_code=True
+    #     )
+    #     pipe = pipeline(
+    #         "text-generation",
+    #         model              = model, 
+    #         tokenizer          = tokenizer, 
+    #         # max_length         = 512,
+    #         temperature        =   0.7,
+    #         top_p              =   0.95,
+    #         repetition_penalty =   1.15
+    #     )
+    #     local_llm = HuggingFacePipeline(pipeline=pipe)
+    # # print(">>>>","local_llm",local_llm)
+    # return local_llm
 
 
 def get_OpenAI(
@@ -70,7 +106,7 @@ def get_OpenAI(
         **kwargs: Any,
 ) -> OpenAI:
     ## 以下模型是Langchain原生支持的模型，这些模型不会走Fschat封装
-    config_models = list_config_llm_models()
+    config_models = list_config_llm_models()  
     if model_name in config_models.get("langchain", {}):
         config = config_models["langchain"][model_name]
         if model_name == "Azure-OpenAI":

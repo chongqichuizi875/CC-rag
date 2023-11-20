@@ -6,8 +6,6 @@ import sys
 from multiprocessing import Process
 from datetime import datetime
 from pprint import pprint
-
-
 # 设置numexpr最大线程数，默认为CPU核心数
 try:
     import numexpr
@@ -378,6 +376,7 @@ def run_model_worker(
     kwargs["worker_address"] = fschat_model_worker_address(model_name)
     model_path = kwargs.get("model_path", "")
     kwargs["model_path"] = model_path
+    
 
     app = create_model_worker_app(log_level=log_level, **kwargs)
     _set_app_event(app, started_event)
