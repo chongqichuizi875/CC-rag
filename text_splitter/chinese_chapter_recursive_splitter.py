@@ -2,6 +2,7 @@ import re
 from typing import List, Optional, Any
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 import logging
+from langchain.docstore.document import Document
 logger = logging.getLogger(__name__)
 
 def is_regex(s):
@@ -105,12 +106,17 @@ class ChineseChapterRecursiveSplitter(RecursiveCharacterTextSplitter):
             self._is_separator_regex = is_separator_regex
             self.title_prefix = "#" # 标记每一层title
             self.title_split = "**" # 分割titles和paragraph
-    def _split_text(self, text: str, separators: List[str]) -> List[str]:
+    def get_seperators(self):
+        return self._separators
+
+    def split_documents(self, text: List[Document]) -> List[Document]:
+        return text
+    def pre_split_text(self, text: str, separators: List[str]=None) -> List[str]:
         chapters = [text]
         chapters = [sub_chapter for chapter in chapters for sub_chapter in get_sub_paragraph(prefix=self.title_prefix, 
                                                                                              titles_before='', 
                                                                                              paragraph=chapter.strip(), 
-                                                                                             patterns=separators, 
+                                                                                             patterns=self._separators, 
                                                                                              index=0,
                                                                                              title_split=self.title_split)]
 
@@ -121,6 +127,7 @@ class ChineseChapterRecursiveSplitter(RecursiveCharacterTextSplitter):
                                                                                                      title_split=self.title_split,
                                                                                                      chunk_size=self._chunk_size,
                                                                                                      chunk_overlap=self._chunk_overlap)]
+        
         return chapters
 
 if __name__ == "__main__":

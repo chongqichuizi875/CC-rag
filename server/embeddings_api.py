@@ -58,7 +58,7 @@ def embed_documents(
     """
     将 List[Document] 向量化，转化为 VectorStore.add_embeddings 可以接受的参数
     """
-    texts = [x.page_content for x in docs]
+    texts = [(x.metadata['titles'] if 'titles' in x.metadata else '') + x.page_content for x in docs]
     metadatas = [x.metadata for x in docs]
     embeddings = embed_texts(texts=texts, embed_model=embed_model, to_query=to_query).data
     if embeddings is not None:
