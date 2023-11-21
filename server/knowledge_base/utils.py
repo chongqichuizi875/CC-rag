@@ -74,7 +74,8 @@ LOADER_DICT = {"UnstructuredHTMLLoader": ['.html'],
                "CustomJSONLoader": [".json"],
                "CSVLoader": [".csv"],
                # "FilteredCSVLoader": [".csv"], # 需要自己指定，目前还没有支持
-               "RapidOCRPDFLoader": [".pdf"],
+            #    "RapidOCRPDFLoader": [".pdf"],
+                "MrjOCRPDFLoader": [".pdf"],
                "RapidOCRLoader": ['.png', '.jpg', '.jpeg', '.bmp'],
                "UnstructuredFileLoader": ['.eml', '.msg', '.rst',
                                           '.rtf', '.txt', '.xml',
@@ -152,7 +153,7 @@ def get_loader(loader_name: str, file_path_or_content: Union[str, bytes, io.Stri
     根据loader_name和文件路径或内容返回文档加载器。
     '''
     try:
-        if loader_name in ["RapidOCRPDFLoader", "RapidOCRLoader","FilteredCSVLoader"]:
+        if loader_name in ["RapidOCRPDFLoader", "RapidOCRLoader","FilteredCSVLoader", "MrjOCRPDFLoader"]:
             document_loaders_module = importlib.import_module('document_loaders')
         else:
             document_loaders_module = importlib.import_module('langchain.document_loaders')
@@ -212,6 +213,9 @@ def make_text_splitter(
             except:  ## 否则使用langchain的text_splitter
                 text_splitter_module = importlib.import_module('langchain.text_splitter')
                 TextSplitter = getattr(text_splitter_module, splitter_name)
+            if splitter_name == "ChineseChapterRecursiveSplitter":
+                text_splitter = TextSplitter(chunk_size=CHUNK_SIZE, chunk_overlap=OVERLAP_SIZE)
+                return text_splitter
 
             if text_splitter_dict[splitter_name]["source"] == "tiktoken":  ## 从tiktoken加载
                 try:
@@ -319,7 +323,7 @@ class KnowledgeFile:
             else:
                 docs = text_splitter.split_documents(docs)
 
-        print(f"文档切分示例：{docs[0]}")
+        # print(f"文档切分示例：{docs[0]}")
         if zh_title_enhance:
             docs = func_zh_title_enhance(docs)
         self.splited_docs = docs
