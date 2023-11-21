@@ -75,11 +75,11 @@ LOADER_DICT = {"UnstructuredHTMLLoader": ['.html'],
                "CSVLoader": [".csv"],
                # "FilteredCSVLoader": [".csv"], # 需要自己指定，目前还没有支持
             #    "RapidOCRPDFLoader": [".pdf"],
-                "MrjOCRPDFLoader": [".pdf"],
+                "MrjOCRPDFLoader": [".pdf", ".docx"],
                "RapidOCRLoader": ['.png', '.jpg', '.jpeg', '.bmp'],
                "UnstructuredFileLoader": ['.eml', '.msg', '.rst',
                                           '.rtf', '.txt', '.xml',
-                                          '.docx', '.epub', '.odt',
+                                           '.epub', '.odt',
                                           '.ppt', '.pptx', '.tsv'],
                }
 SUPPORTED_EXTS = [ext for sublist in LOADER_DICT.values() for ext in sublist]

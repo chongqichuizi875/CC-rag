@@ -14,19 +14,19 @@ DEFAULT_BIND_HOST = "0.0.0.0" if sys.platform != "win32" else "127.0.0.1"
 # webui.py server
 WEBUI_SERVER = {
     "host": DEFAULT_BIND_HOST,
-    "port": 8501,
+    "port": 18501,
 }
 
 # api.py server
 API_SERVER = {
     "host": DEFAULT_BIND_HOST,
-    "port": 7861,
+    "port": 17861,
 }
 
 # fastchat openai_api server
 FSCHAT_OPENAI_API = {
     "host": DEFAULT_BIND_HOST,
-    "port": 20000,
+    "port": 30000,
 }
 
 # fastchat model_worker server
@@ -36,15 +36,15 @@ FSCHAT_MODEL_WORKERS = {
     # 所有模型共用的默认配置，可在模型专项配置中进行覆盖。
     "default": {
         "host": DEFAULT_BIND_HOST,
-        "port": 20002,
+        "port": 30002,
         "device": LLM_DEVICE,
         # False,'vllm',使用的推理加速框架,使用vllm如果出现HuggingFace通信问题，参见doc/FAQ
         # vllm对一些模型支持还不成熟，暂时默认关闭
         "infer_turbo": False,
 
         # model_worker多卡加载需要配置的参数
-        "gpus": "4", # 使用的GPU，以str的格式指定，如"0,1"，如失效请使用CUDA_VISIBLE_DEVICES="0,1"等形式指定
-        "num_gpus": 1, # 使用GPU的数量
+        "gpus": "5,6", # 使用的GPU，以str的格式指定，如"0,1"，如失效请使用CUDA_VISIBLE_DEVICES="0,1"等形式指定
+        "num_gpus": 2, # 使用GPU的数量
         "max_gpu_memory": "24GiB", # 每个GPU占用的最大显存
 
         # 以下为model_worker非常用参数，可根据需要配置
@@ -96,30 +96,30 @@ FSCHAT_MODEL_WORKERS = {
     # },
 
     #以下配置可以不用修改，在model_config中设置启动的模型
-    "zhipu-api": {
-        "port": 21001,
-    },
-    "minimax-api": {
-        "port": 21002,
-    },
-    "xinghuo-api": {
-        "port": 21003,
-    },
-    "qianfan-api": {
-        "port": 21004,
-    },
-    "fangzhou-api": {
-        "port": 21005,
-    },
-    "qwen-api": {
-        "port": 21006,
-    },
-    "baichuan-api": {
-        "port": 21007,
-    },
-    "azure-api": {
-        "port": 21008,
-    },
+    # "zhipu-api": {
+    #     "port": 31001,
+    # },
+    # "minimax-api": {
+    #     "port": 31002,
+    # },
+    # "xinghuo-api": {
+    #     "port": 31003,
+    # },
+    # "qianfan-api": {
+    #     "port": 31004,
+    # },
+    # "fangzhou-api": {
+    #     "port": 31005,
+    # },
+    # "qwen-api": {
+    #     "port": 31006,
+    # },
+    # "baichuan-api": {
+    #     "port": 31007,
+    # },
+    # "azure-api": {
+    #     "port": 31008,
+    # },
 }
 
 # fastchat multi model worker server
@@ -130,6 +130,6 @@ FSCHAT_MULTI_MODEL_WORKERS = {
 # fastchat controller server
 FSCHAT_CONTROLLER = {
     "host": DEFAULT_BIND_HOST,
-    "port": 20001,
+    "port": 30001,
     "dispatch_method": "shortest_queue",
 }

@@ -9,6 +9,7 @@ from langchain.docstore.document import Document
 from text_splitter.chinese_chapter_recursive_splitter import ChineseChapterRecursiveSplitter
 from configs.kb_config import CHUNK_SIZE, OVERLAP_SIZE
 from copy import deepcopy
+import os
 
 def remove_special_chars(text:str) -> str:
     special_chars = '…■.-'
@@ -130,11 +131,14 @@ class MrjOCRPDFLoader(UnstructuredFileLoader):
                 b_unit.update(1)
             return resp
         text = pdf2text(self.file_path)
+        for chapter in text:
+            chapter.metadata['source'] = self.file_path
         new_next = []
         for sub_text in text:
             new_next.append([sub_text.metadata,sub_text.page_content])    
         with open("/home/cc007/cc/chat_doc/document_loaders/111.json", 'w') as f:
             json.dump(new_next, f, ensure_ascii=False, indent=4)
+        
         return text
 
     def load(self) -> List[Document]:
