@@ -172,6 +172,7 @@ class MrjOCRPDFLoader(UnstructuredFileLoader):
         if self.file_path[-5:] == ".docx":
             doc2pdf(self.file_path)
             self.file_path = self.file_path[-5:] + ".pdf"
+            
         text = pdf2text(self.file_path)
         for chapter in text:
             chapter.metadata['source'] = self.file_path
