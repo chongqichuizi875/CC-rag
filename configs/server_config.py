@@ -43,8 +43,8 @@ FSCHAT_MODEL_WORKERS = {
         "infer_turbo": False,
 
         # model_worker多卡加载需要配置的参数
-        "gpus": "5,6", # 使用的GPU，以str的格式指定，如"0,1"，如失效请使用CUDA_VISIBLE_DEVICES="0,1"等形式指定
-        "num_gpus": 2, # 使用GPU的数量
+        "gpus": "6", # 使用的GPU，以str的格式指定，如"0,1"，如失效请使用CUDA_VISIBLE_DEVICES="0,1"等形式指定
+        "num_gpus": 1, # 使用GPU的数量
         "max_gpu_memory": "24GiB", # 每个GPU占用的最大显存
 
         # 以下为model_worker非常用参数，可根据需要配置
