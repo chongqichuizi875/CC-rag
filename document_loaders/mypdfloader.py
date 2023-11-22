@@ -133,8 +133,8 @@ class MrjOCRPDFLoader(UnstructuredFileLoader):
         new_next = []
         for sub_text in text:
             new_next.append([sub_text.metadata,sub_text.page_content])    
-        with open("/home/cc007/cc/chat_doc/document_loaders/111.json", 'w') as f:
-            json.dump(new_next, f, ensure_ascii=False, indent=4)
+        # with open("/home/cc007/cc/chat_doc/document_loaders/111.json", 'w') as f:
+        #     json.dump(new_next, f, ensure_ascii=False, indent=4)
         return text
 
     def load(self) -> List[Document]:
