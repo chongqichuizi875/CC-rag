@@ -151,7 +151,7 @@ MODEL_PATH = {
 
     "llm_model": {
         # 以下部分模型并未完全测试，仅根据fastchat和vllm模型的模型列表推定支持
-        # 'cc-13b-chat':'cc-13b-v1-3',
+        'cc-13b-chat':'cc-13b-v1-4',
         "chatglm2-6b": "THUDM/chatglm2-6b",
         "chatglm2-6b-32k": "THUDM/chatglm2-6b-32k",
 
