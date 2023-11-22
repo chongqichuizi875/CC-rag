@@ -199,7 +199,7 @@ def upload_docs(
 
         if filename not in file_names:
             file_names.append(filename)
-
+    
     # 对保存的文件进行向量化
     if to_vector_store:
         result = update_docs(

@@ -205,6 +205,8 @@ class MrjOCRPDFLoader(UnstructuredFileLoader):
                 b_unit.update(1)
             return resp
         text = pdf2text(self.file_path)
+        for chapter in text:
+            chapter.metadata['source'] = self.file_path
         return text
 
 class RapidOCRPDFLoader(UnstructuredFileLoader):

@@ -47,52 +47,17 @@ async def knowledge_base_chat(query: str = Body(..., description="用户输入",
     
     print("len(history)",len(history))
     history = history[-6:]
-    
-    
-    #用户意图
-    _model = get_ChatOpenAI(
-            model_name=model_name,
-            temperature=temperature,
-            max_tokens=max_tokens
-            )
+
+    # #用户意图
+    # _model = get_ChatOpenAI(
+    #         model_name=model_name,
+    #         temperature=0.1,
+    #         max_tokens=max_tokens
+    #         )
     # intention_prompt_template = get_prompt_template("knowledge_base_chat", "intention")
-    # intention_input_msg = History(role="system", content=intention_prompt_template).to_msg_template(False)
+    # intention_input_msg = History(role="user", content=intention_prompt_template).to_msg_template(False)
     # intention_chat_prompt = ChatPromptTemplate.from_messages([i.to_msg_template() for i in []] + [intention_input_msg])
-    # # 你是军事装备维修领域专家。
-    # intention_chat_prompt =PromptTemplate(
-    #     template="请根据用户输入判断是否是咨询军事装备的专业问题，如果是请返回'是'，否则返回'否'。\
-    #     答案格式要求: '是'或者'否'。不能有其他答案 \
-    #     参考示例: \
-    #         示例1: \
-    #             用户输入: \
-    #                 '你叫什么名字' \
-    #             返回: \
-    #                 '否' \
-    #         示例2: \
-    #             用户输入: \
-    #                 '今天天气怎么样？'\
-    #                     \
-    #             返回: \
-    #                 '否' \
-    #         示例3: \
-    #             用户输入: \
-    #                 '能介绍一下杭州这个城市？'\
-    #             返回: \
-    #                 '否' \
-    #         示例4: \
-    #             用户输入: \
-    #                 '车辆发动机故障怎么维修？'\
-    #             返回: \
-    #                 '是' \
-    #         示例5: \
-    #             用户输入: \
-    #                 '陆军装备有哪些？' \
-    #             返回: \
-    #                 '是' \
-    #     用户输入: \
-    #         '{question}' \
-    #     ",input_variables=["question"]
-    # )
+
     # intention_chain = LLMChain(llm=_model,prompt=intention_chat_prompt)
     # intention = intention_chain({"question":query})
     # print("xxxx","用户意图",intention)
@@ -131,9 +96,12 @@ async def knowledge_base_chat(query: str = Body(..., description="用户输入",
             prompt_template = get_prompt_template("knowledge_base_chat", "Empty")
         else:
             prompt_template = get_prompt_template("knowledge_base_chat", prompt_name)
-        input_msg = History(role="system", content=prompt_template).to_msg_template(False)
+            
+        input_msg = History(role="user", content=prompt_template).to_msg_template(False)
+        
         chat_prompt = ChatPromptTemplate.from_messages(
             [i.to_msg_template() for i in history] + [input_msg])
+        
 
         chain = LLMChain(prompt=chat_prompt, llm=model)
         
