@@ -18,6 +18,7 @@ try:
 except ImportError:
     client = None
 
+
 def doc2pdf(doc):
     """
     convert a doc/docx document to pdf format
@@ -51,9 +52,15 @@ def doc2pdf_linux(doc):
         raise subprocess.SubprocessError(stderr)
 
 def remove_special_chars(text:str) -> str:
-    special_chars = '…■.-'
-    text = re.sub(f"[{re.escape(special_chars)}]", "", text)
+    special_chars = r"[-.]{2,}|[■…]"
+    text = re.sub(special_chars, "", text)
     return text
+
+def potential_title_pos(text):
+    if len(text) == 0:
+        return -1
+    index_of_newline = text.find('\n')
+    return index_of_newline
 
 def create_documents(chapter, title_stack, title_prefix, metadata: dict) -> List[Document]:
     prefix = ""
@@ -62,7 +69,14 @@ def create_documents(chapter, title_stack, title_prefix, metadata: dict) -> List
             prefix += title_prefix*i+sub_title
     prefix = re.sub(r'\s+', '', prefix)
     metadata['titles'] = prefix
+    metadata['image_and_table'] = []
+    pattern = r"[图|表]\s+\d+-\d+\s+[^，。；！？：“”‘’（）《》&#8203;``【oaicite:0】``&#8203;、\n]*\n" # 提取图和表
+    matches = re.findall(pattern, chapter)
+    if matches:
+        for match in matches:
+            metadata['image_and_table'].append(match.strip())
     chapter = post_split(text=chapter)
+    
     if len(chapter) < OVERLAP_SIZE:
         return []
     # if len(chapter) > CHUNK_SIZE:
@@ -71,6 +85,7 @@ def create_documents(chapter, title_stack, title_prefix, metadata: dict) -> List
     #     docs = [Document(page_content=chunk, metadata=deepcopy(metadata)) for chunk in chunks]
     #     return docs
     docs = [Document(page_content=chapter, metadata=deepcopy(metadata))]
+    metadata['image_and_table'] = []
     return docs
 
 def post_split(text):
@@ -150,12 +165,15 @@ class MrjOCRPDFLoader(UnstructuredFileLoader):
                                 # chapter += txt[match.end():]
                                 while len(title_stack) < title_level: # 补齐title_stack到低一级
                                     title_stack.append('')
-                            title_stack.append(txt[match.end():])
+                            cur_line = txt[match.end():]
+                            title_pos = potential_title_pos(cur_line)
+                            title_stack.append(cur_line[:title_pos])
+                            chapter += "\n" + cur_line[title_pos:]
                             matched = True
                             break
                     if not matched:
                         if len(chapter) < CHUNK_SIZE:
-                            chapter += post_split(text=txt)
+                            chapter += "\n" + post_split(text=txt)
                         else:
                             metadata['e_page'], metadata['e_x'], metadata['e_y'] = page_num+1,x1,y1
                             docs = create_documents(chapter=chapter, 
@@ -176,11 +194,11 @@ class MrjOCRPDFLoader(UnstructuredFileLoader):
         text = pdf2text(self.file_path)
         for chapter in text:
             chapter.metadata['source'] = self.file_path
-        # new_next = []
-        # for sub_text in text:
-        #     new_next.append([sub_text.metadata,sub_text.page_content])    
-        # with open("/home/cc007/cc/chat_doc/document_loaders/111.json", 'w') as f:
-            # json.dump(new_next, f, ensure_ascii=False, indent=4)
+        new_next = []
+        for sub_text in text:
+            new_next.append([len(sub_text.page_content), sub_text.metadata, sub_text.page_content])    
+        with open("/home/cc007/cc/chat_doc/document_loaders/111.json", 'w') as f:
+            json.dump(new_next, f, ensure_ascii=False, indent=4)
         
         return text
 
