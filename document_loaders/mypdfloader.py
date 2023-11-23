@@ -70,12 +70,13 @@ def create_documents(chapter, title_stack, title_prefix, metadata: dict) -> List
     prefix = re.sub(r'\s+', '', prefix)
     metadata['titles'] = prefix
     metadata['image_and_table'] = []
+    
+    chapter = post_split(text=chapter)
     pattern = r"[图|表]\s+\d+-\d+\s+[^，。；！？：“”‘’（）《》&#8203;``【oaicite:0】``&#8203;、\n]*\n" # 提取图和表
     matches = re.findall(pattern, chapter)
     if matches:
         for match in matches:
             metadata['image_and_table'].append(match.strip())
-    chapter = post_split(text=chapter)
     
     if len(chapter) < OVERLAP_SIZE:
         return []
@@ -102,7 +103,13 @@ def post_split(text):
     text = re.sub(r' {2,}', ' ', text)
     text = re.sub(r' ?\n ?', '\n', text)
     text = re.sub(r'\n{2,}', '\n', text)
+    text = remove_newlines_between_chinese(text)
     return text
+
+def remove_newlines_between_chinese(text):
+    # 正则表达式，匹配两个汉字之间的换行符，但是如果其中一个汉字是'图'或者'表'则不管
+    pattern = re.compile(r'((?![图表])[\u4e00-\u9fa5])(\s+)((?![图表])[\u4e00-\u9fa5])')
+    return pattern.sub(r'\1\2', text).strip()
 
 class MrjOCRPDFLoader(UnstructuredFileLoader):
     def __init__(self, file_path: str or List[str], mode: str = "paged", **unstructured_kwargs: Any):
