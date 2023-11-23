@@ -15,44 +15,8 @@ from server.knowledge_base.kb_service.base import KBServiceFactory
 from server.db.repository.knowledge_file_repository import get_file_detail
 from typing import List
 from langchain.docstore.document import Document
-import subprocess
 
-try:
-    from comtypes import client
-except ImportError:
-    client = None
-
-def doc2pdf(doc):
-    """
-    convert a doc/docx document to pdf format
-    :param doc: path to document
-    """
-    doc = os.path.abspath(doc) # bugfix - searching files in windows/system32
-    if client is None:
-        return doc2pdf_linux(doc)
-    name, ext = os.path.splitext(doc)
-    try:
-        word = client.CreateObject('Word.Application')
-        worddoc = word.Documents.Open(doc)
-        worddoc.SaveAs(name + '.pdf', FileFormat=17)
-    except Exception:
-        raise
-    finally:
-        worddoc.Close()
-        word.Quit()
-
-
-def doc2pdf_linux(doc):
-    """
-    convert a doc/docx document to pdf format (linux only, requires libreoffice)
-    :param doc: path to document
-    """
-    cmd = 'libreoffice --convert-to pdf'.split() + [doc]
-    p = subprocess.Popen(cmd, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
-    p.wait(timeout=10)
-    stdout, stderr = p.communicate()
-    if stderr:
-        raise subprocess.SubprocessError(stderr)
+from server.knowledge_base.word2pdf import doc2pdf
 
 class DocumentWithScore(Document):
     score: float = None
@@ -106,7 +70,8 @@ def _save_files_in_thread(files: List[UploadFile],
         try:
             print(f"upload_file")
             filename = file.filename
-            file_path = get_file_path(knowledge_base_name=knowledge_base_name, doc_name=filename)
+            file_search_name = filename
+            file_path = get_file_path(knowledge_base_name=knowledge_base_name, doc_name=file_search_name)
             data = {"knowledge_base_name": knowledge_base_name, "file_name": filename}
             file_content = file.file.read()  # 读取上传文件的内容
             if (os.path.isfile(file_path)
@@ -120,12 +85,6 @@ def _save_files_in_thread(files: List[UploadFile],
 
             with open(file_path, "wb") as f:
                 f.write(file_content)
-            if filename[-5:] == ".docx":
-                doc2pdf(file_path)
-                os.remove(file_path)
-                filename = filename[-5:] + ".pdf"
-                file_path = file_path[-5:] + ".pdf"
-                return dict(code=200, msg=f"成功上传pdf(原为docx)文件 {filename}", data=data)
             return dict(code=200, msg=f"成功上传文件 {filename}", data=data)
         except Exception as e:
             msg = f"{filename} 文件上传失败，报错信息为: {e}"
@@ -199,6 +158,21 @@ def upload_docs(
 
         if filename not in file_names:
             file_names.append(filename)
+            
+    print("1 file_names:",file_names)
+    for index, filename in enumerate(file_names):
+        if filename[-5:] == ".docx" or filename[-4:] == ".doc":
+            file_path = get_file_path(knowledge_base_name=knowledge_base_name, doc_name=filename)
+            doc2pdf(file_path)
+            # 原始文件先不删除，留着cache判断用
+            # os.remove(file_path)
+            if filename[-5:] == ".docx": 
+                filename = filename[:-5] + ".pdf"
+            else:
+                filename = filename[:-4] + ".pdf"
+            file_names[index] = filename
+            
+    print("2 file_names:",file_names)
     
     # 对保存的文件进行向量化
     if to_vector_store:
@@ -323,7 +297,8 @@ def update_docs(
         else:
             kb_name, file_name, error = result
             failed_files[file_name] = error
-
+    
+    
     # 将自定义的docs进行向量化
     for file_name, v in docs.items():
         try:

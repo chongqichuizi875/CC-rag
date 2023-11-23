@@ -160,7 +160,7 @@ MODEL_PATH = {
 
         "baichuan-7b": "baichuan-inc/Baichuan-7B",
         "baichuan-13b": "Baichuan2-13B-Base",
-        'cc-13b-chat': 'Baichuan2-13B-Chat',
+        # 'cc-13b-chat': 'Baichuan2-13B-Chat',
 
         "aquila-7b": "BAAI/Aquila-7B",
         "aquilachat-7b": "BAAI/AquilaChat-7B",

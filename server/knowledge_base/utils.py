@@ -37,13 +37,23 @@ def get_kb_path(knowledge_base_name: str):
 def get_doc_path(knowledge_base_name: str):
     return os.path.join(get_kb_path(knowledge_base_name), "content")
 
+def get_word_doc_path(knowledge_base_name: str):
+    return os.path.join(get_kb_path(knowledge_base_name), "raw")
+
 
 def get_vs_path(knowledge_base_name: str, vector_name: str):
     return os.path.join(get_kb_path(knowledge_base_name), "vector_store", vector_name)
 
 
 def get_file_path(knowledge_base_name: str, doc_name: str):
-    return os.path.join(get_doc_path(knowledge_base_name), doc_name)
+    
+    if doc_name[-5:] == ".docx" or doc_name[-4:] == ".doc":
+        raw_dir = get_word_doc_path(knowledge_base_name)
+        if not os.path.exists(raw_dir):
+            os.makedirs(raw_dir)
+        return os.path.join(raw_dir, doc_name)
+    else:
+        return os.path.join(get_doc_path(knowledge_base_name), doc_name)
 
 
 def list_kbs_from_folder():
