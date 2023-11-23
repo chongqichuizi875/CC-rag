@@ -177,3 +177,4 @@ cython_debug/
 logs/openai_api.log
 server/knowledge_base/kb_cache/__pycache__/base.cpython-38.pyc
 server/knowledge_base/kb_cache/__pycache__/faiss_cache.cpython-38.pyc
+logs/openai_api.log
