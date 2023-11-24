@@ -158,7 +158,7 @@ async def knowledge_base_chat(query: str = Body(..., description="用户输入",
             else:
                 page_content = doc.page_content
             
-            ref_doc = {"filename":str(os.path.basename(doc.metadata["source"])),"url":str(url),"score":doc.score,"page_no":3,"page_content":page_content,"content_pos_1":{"page_no":1,"x":0,"y":0.5},"content_pos_1":{"page_no":2,"x":1,"y":0.8}}
+            ref_doc = {"filename":str(os.path.basename(doc.metadata["source"])),"url":str(url),"score":doc.score,"page_no":doc.metadata["b_page"],"page_content":page_content,"content_pos_1":{"page_no":doc.metadata["b_page"],"x":doc.metadata["b_x"],"y":doc.metadata["b_y"]},"content_pos_1":{"page_no":doc.metadata["e_page"],"x":doc.metadata["e_x"],"y":doc.metadata["e_y"]}}
             print(ref_doc)
             ref_documents.append(ref_doc)
 

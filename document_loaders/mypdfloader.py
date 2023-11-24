@@ -11,46 +11,6 @@ from configs.kb_config import CHUNK_SIZE, OVERLAP_SIZE
 from copy import deepcopy
 import os
 
-import subprocess
-
-try:
-    from comtypes import client
-except ImportError:
-    client = None
-
-
-def doc2pdf(doc):
-    """
-    convert a doc/docx document to pdf format
-    :param doc: path to document
-    """
-    doc = os.path.abspath(doc) # bugfix - searching files in windows/system32
-    if client is None:
-        return doc2pdf_linux(doc)
-    name, ext = os.path.splitext(doc)
-    try:
-        word = client.CreateObject('Word.Application')
-        worddoc = word.Documents.Open(doc)
-        worddoc.SaveAs(name + '.pdf', FileFormat=17)
-    except Exception:
-        raise
-    finally:
-        worddoc.Close()
-        word.Quit()
-
-
-def doc2pdf_linux(doc):
-    """
-    convert a doc/docx document to pdf format (linux only, requires libreoffice)
-    :param doc: path to document
-    """
-    cmd = 'libreoffice --convert-to pdf'.split() + [doc]
-    p = subprocess.Popen(cmd, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
-    p.wait(timeout=10)
-    stdout, stderr = p.communicate()
-    if stderr:
-        raise subprocess.SubprocessError(stderr)
-
 def remove_special_chars(text:str) -> str:
     special_chars = r"[-.]{2,}|[■…]"
     text = re.sub(special_chars, "", text)
@@ -198,9 +158,9 @@ class MrjOCRPDFLoader(UnstructuredFileLoader):
                     
                 b_unit.update(1)
             return resp
-        if self.file_path[-5:] == ".docx":
-            doc2pdf(self.file_path)
-            self.file_path = self.file_path[-5:] + ".pdf"
+        # if self.file_path[-5:] == ".docx":
+        #     doc2pdf(self.file_path)
+        #     self.file_path = self.file_path[-5:] + ".pdf"
             
         text = pdf2text(self.file_path)
         for chapter in text:
