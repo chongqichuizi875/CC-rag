@@ -84,10 +84,18 @@ class MrjOCRPDFLoader(UnstructuredFileLoader):
             resp = []
             chapter = ""
             metadata = dict()
-            metadata['b_page'] = 0
+            metadata['content_pos'] = []
+            loc_dict = {}
+            loc_dict['page_no'] = 0
             # 初始化开始和结束的x坐标，为了求一段中开始(结束)值的最值
-            metadata['b_x'] = 1
-            metadata['e_x'] = 0
+            loc_dict['left_top'] = {
+                'x':1,
+                'y':1
+            }
+            loc_dict['right_bottom'] = {
+                'x':0,
+                'y':0
+            }
             title_stack = []
             title_level_list = self.text_splitter.get_seperators()
             for page_num in range(len(doc)):
@@ -103,39 +111,29 @@ class MrjOCRPDFLoader(UnstructuredFileLoader):
                     x1 /= page_width
                     y0 /= page_height
                     y1 /= page_height
-                    metadata['b_x'], metadata['b_y'] = min(x0, metadata['b_x']), y0
+                    loc_dict['left_top']['x'], loc_dict['left_top']['y'] = \
+                        min(x0, loc_dict['left_top']['x']), min(y0, loc_dict['left_top']['y'])
                     for title_level, title in enumerate(title_level_list):
                         match = re.search(pattern=title, string=txt)
                         if match:
                             # 手动维护一个标题栈
-                            if len(title_stack) > title_level: 
-                                # 检索到更高级/平级标题，把当前titles拼接加上chapter内容append到list
-                                metadata['e_page'], metadata['e_x'], metadata['e_y'] = page_num+1,max(x1, metadata['e_x']),y1
-                                docs = create_documents(chapter=chapter, 
-                                                        title_stack=title_stack, 
-                                                        title_prefix=self.text_splitter.title_prefix,
-                                                        metadata=metadata)
-                                
-                                resp.extend(docs)
-                                # chapter = txt[match.end():]
-                                chapter = ""
-                                metadata['b_page'], metadata['b_x'], metadata['b_y'] = page_num+1,x0,y0
-                                while len(title_stack) > title_level: # 把多余title pop掉
-                                    title_stack.pop()
-                            else: # 检索到低级标题，查看chapter是否有内容，有的话加上当前title，append到list
-                                if chapter.strip():
-                                    metadata['e_page'], metadata['e_x'], metadata['e_y'] = page_num+1,max(x1, metadata['e_x']),y1
-                                    docs = create_documents(chapter=chapter, 
-                                                        title_stack=title_stack, 
-                                                        title_prefix=self.text_splitter.title_prefix,
-                                                        metadata=metadata)
-                                    # chapter_doc.metadata = metadata
-                                    resp.extend(docs)
-                                    chapter = ""
-                                    metadata['b_page'], metadata['b_x'], metadata['b_y'] = page_num+1,x0,y0
-                                # chapter += txt[match.end():]
-                                while len(title_stack) < title_level: # 补齐title_stack到低一级
-                                    title_stack.append('')
+                            loc_dict['page_no'], loc_dict['right_bottom']['x'], loc_dict['right_bottom']['y'] = \
+                                page_num+1,max(x1, loc_dict['right_bottom']['x']),y1
+                            metadata['content_pos'].append(deepcopy(loc_dict))
+                            docs = create_documents(chapter=chapter, 
+                                                title_stack=title_stack, 
+                                                title_prefix=self.text_splitter.title_prefix,
+                                                metadata=metadata)
+                            resp.extend(docs)
+                            chapter = ""
+                            metadata['content_pos'] = []
+                            loc_dict['page_no'], loc_dict['left_top']['x'], loc_dict['left_top']['y'], loc_dict['right_bottom']['x'], loc_dict['right_bottom']['y'] = \
+                                page_num+1,x0,y0,x1,y1 
+                            # 检索到更高级/平级标题，把当前titles拼接加上chapter内容append到list
+                            while len(title_stack) > title_level: # 把多余title pop掉
+                                title_stack.pop()
+                            while len(title_stack) < title_level: # 补齐title_stack到低一级
+                                title_stack.append('')
                             cur_line = txt[match.end():]
                             title_pos = potential_title_pos(cur_line)
                             title_stack.append(cur_line[:title_pos])
@@ -143,19 +141,27 @@ class MrjOCRPDFLoader(UnstructuredFileLoader):
                             matched = True
                             break
                     if not matched:
-                        metadata['e_page'], metadata['e_x'], metadata['e_y'] = page_num+1,max(x1, metadata['e_x']),y1
+                        loc_dict['page_no'], loc_dict['right_bottom']['x']  = page_num+1,max(x1, loc_dict['right_bottom']['x'])
                         if len(chapter) < CHUNK_SIZE:
+                            # 如果chunk size不满，继续增大end y
+                            # 因为只有这一种可能会在page结尾append坐标信息，page结尾append的坐标信息必须是
+                            # 当前页面左上和右下的坐标，来标记这一整页都被包含
+                            loc_dict['right_bottom']['y'] = max(y1, loc_dict['right_bottom']['y']) 
                             chapter += "\n" + post_split(text=txt)
                         else:
+                            loc_dict['right_bottom']['y'] = y1 # chunk size到了要截断，则end y必须是当前位置的y
+                            metadata['content_pos'].append(deepcopy(loc_dict))
                             docs = create_documents(chapter=chapter, 
                                                     title_stack=title_stack, 
                                                     title_prefix=self.text_splitter.title_prefix,
                                                     metadata=metadata)
                             resp.extend(docs)
                             chapter = post_split(text=txt)
-                            metadata['b_page'], metadata['b_x'], metadata['b_y'] = page_num+1,x0,y0
+                            metadata['content_pos'] = []
+                            loc_dict['page_no'], loc_dict['left_top']['x'], loc_dict['left_top']['y'], loc_dict['right_bottom']['x'], loc_dict['right_bottom']['y'] = \
+                                page_num+1,x0,y0,x1,y1
 
-                    
+                metadata['content_pos'].append(deepcopy(loc_dict))
                 b_unit.update(1)
             return resp
         # if self.file_path[-5:] == ".docx":
@@ -165,11 +171,11 @@ class MrjOCRPDFLoader(UnstructuredFileLoader):
         text = pdf2text(self.file_path)
         for chapter in text:
             chapter.metadata['source'] = self.file_path
-        new_next = []
-        for sub_text in text:
-            new_next.append([len(sub_text.page_content), sub_text.metadata, sub_text.page_content])    
-        with open("/home/cc007/cc/chat_doc/document_loaders/111.json", 'w') as f:
-            json.dump(new_next, f, ensure_ascii=False, indent=4)
+        # new_next = []
+        # for sub_text in text:
+        #     new_next.append([len(sub_text.page_content), sub_text.metadata, sub_text.page_content])    
+        # with open("/home/cc007/cc/chat_doc/document_loaders/111.json", 'w') as f:
+        #     json.dump(new_next, f, ensure_ascii=False, indent=4)
         
         return text
 

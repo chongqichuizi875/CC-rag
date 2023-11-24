@@ -77,10 +77,10 @@ for query, index in queries.items():
     for i in range(1):
         answer_list.append([i, answers[i][0].metadata, answers[i][0].page_content[:100]])
     length = len(answers[0][0].page_content)
-    if answers[0][0].metadata['b_page'] <= index <= answers[0][0].metadata['e_page']:
+    if answers[0][0].metadata['content_pos'][0]['page_no'] <= index <= answers[0][0].metadata['content_pos'][-1]['page_no']:
         accurate += 1
     else:
-        print(f"正确：{index}, 回答区间[{answers[0][0].metadata['b_page']}, {answers[0][0].metadata['e_page']}]")
+        print(f"正确：{index}, 回答区间[{answers[0][0].metadata['content_pos'][0]['page_no']}, {answers[0][0].metadata['content_pos'][0]['page_no']}]")
     d.append({"page":index, 
               "query": query,
               "answer":answer_list,
