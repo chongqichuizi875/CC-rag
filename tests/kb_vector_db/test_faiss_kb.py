@@ -79,6 +79,8 @@ for query, index in queries.items():
     length = len(answers[0][0].page_content)
     if answers[0][0].metadata['b_page'] <= index <= answers[0][0].metadata['e_page']:
         accurate += 1
+    else:
+        print(f"正确：{index}, 回答区间[{answers[0][0].metadata['b_page']}, {answers[0][0].metadata['e_page']}]")
     d.append({"page":index, 
               "query": query,
               "answer":answer_list,
