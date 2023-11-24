@@ -124,7 +124,10 @@ class MrjOCRPDFLoader(UnstructuredFileLoader):
             resp = []
             chapter = ""
             metadata = dict()
-            metadata['b_page'], metadata['b_x'], metadata['b_y'] = 0, 0, 0
+            metadata['b_page'] = 0
+            # 初始化开始和结束的x坐标，为了求一段中开始(结束)值的最值
+            metadata['b_x'] = 1
+            metadata['e_x'] = 0
             title_stack = []
             title_level_list = self.text_splitter.get_seperators()
             for page_num in range(len(doc)):
@@ -140,13 +143,14 @@ class MrjOCRPDFLoader(UnstructuredFileLoader):
                     x1 /= page_width
                     y0 /= page_height
                     y1 /= page_height
+                    metadata['b_x'], metadata['b_y'] = min(x0, metadata['b_x']), y0
                     for title_level, title in enumerate(title_level_list):
                         match = re.search(pattern=title, string=txt)
                         if match:
                             # 手动维护一个标题栈
                             if len(title_stack) > title_level: 
                                 # 检索到更高级/平级标题，把当前titles拼接加上chapter内容append到list
-                                metadata['e_page'], metadata['e_x'], metadata['e_y'] = page_num+1,x1,y1
+                                metadata['e_page'], metadata['e_x'], metadata['e_y'] = page_num+1,max(x1, metadata['e_x']),y1
                                 docs = create_documents(chapter=chapter, 
                                                         title_stack=title_stack, 
                                                         title_prefix=self.text_splitter.title_prefix,
@@ -160,7 +164,7 @@ class MrjOCRPDFLoader(UnstructuredFileLoader):
                                     title_stack.pop()
                             else: # 检索到低级标题，查看chapter是否有内容，有的话加上当前title，append到list
                                 if chapter.strip():
-                                    metadata['e_page'], metadata['e_x'], metadata['e_y'] = page_num+1,x1,y1
+                                    metadata['e_page'], metadata['e_x'], metadata['e_y'] = page_num+1,max(x1, metadata['e_x']),y1
                                     docs = create_documents(chapter=chapter, 
                                                         title_stack=title_stack, 
                                                         title_prefix=self.text_splitter.title_prefix,
@@ -179,10 +183,10 @@ class MrjOCRPDFLoader(UnstructuredFileLoader):
                             matched = True
                             break
                     if not matched:
+                        metadata['e_page'], metadata['e_x'], metadata['e_y'] = page_num+1,max(x1, metadata['e_x']),y1
                         if len(chapter) < CHUNK_SIZE:
                             chapter += "\n" + post_split(text=txt)
                         else:
-                            metadata['e_page'], metadata['e_x'], metadata['e_y'] = page_num+1,x1,y1
                             docs = create_documents(chapter=chapter, 
                                                     title_stack=title_stack, 
                                                     title_prefix=self.text_splitter.title_prefix,
