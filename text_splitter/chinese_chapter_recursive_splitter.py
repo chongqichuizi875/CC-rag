@@ -101,8 +101,8 @@ class ChineseChapterRecursiveSplitter(RecursiveCharacterTextSplitter):
             self._separators = separators or [
                                               r'\b第(?:[一二三四五六七八九十]{1,2}|\d+)[章]', 
                                               r'\b第(?:[一二三四五六七八九十]{1,2}|\d+)[节]', 
-                                              r'\b[一二三四五六七八九十]{1,2}[、.]'
-                                            #   r'\b\d+[.、]\s*[^\n]+'
+                                              r'\b[一二三四五六七八九十]{1,2}[、.]',
+                                              r'\b\d+(\.\d+)+\s+'
                                             #   r'\b\([一二三四五六七八九十]{1,2}\)'
                                               ]
                                             #   r'\n{2,}']
