@@ -61,6 +61,7 @@ def embed_documents(
     texts = [
              (x.metadata['titles'] if 'titles' in x.metadata else '') + # 标题增强
              (' '.join(x.metadata['image_and_table']) if 'image_and_table' in x.metadata else '') + # 图表增强
+             (' '.join(x.metadata['keyword']) if 'keyword' in x.metadata else '') + # 关键词增强
              x.page_content for x in docs]
     metadatas = [x.metadata for x in docs]
     embeddings = embed_texts(texts=texts, embed_model=embed_model, to_query=to_query).data

@@ -11,6 +11,16 @@ from configs.kb_config import CHUNK_SIZE, OVERLAP_SIZE
 from copy import deepcopy
 import os
 
+key_word_dict = {
+    "维修":"维修",
+    "故障":"故障",
+    "参数":"参数",
+    "属性":"属性",
+    "操作":"操作",
+    "使用":"使用",
+    "步骤":"步骤"
+}
+
 def remove_special_chars(text:str) -> str:
     special_chars = r"[-.]{2,}|[■…]"
     text = re.sub(special_chars, "", text)
@@ -30,6 +40,7 @@ def create_documents(chapter, title_stack, title_prefix, metadata: dict) -> List
     prefix = re.sub(r'\s+', '', prefix)
     metadata['titles'] = prefix
     metadata['image_and_table'] = []
+    metadata['keyword'] = []
     
     chapter = post_split(text=chapter)
     pattern = r"[图|表]\s+\d+-\d+\s+[^，。；！？：“”‘’（）《》&#8203;``【oaicite:0】``&#8203;、\n]*\n" # 提取图和表
@@ -37,6 +48,9 @@ def create_documents(chapter, title_stack, title_prefix, metadata: dict) -> List
     if matches:
         for match in matches:
             metadata['image_and_table'].append(match.strip())
+    for key, value in key_word_dict.items():
+        if re.findall(key, chapter):
+            metadata['keyword'].append(value)
     
     if len(chapter) < OVERLAP_SIZE:
         return []
@@ -98,14 +112,17 @@ class MrjOCRPDFLoader(UnstructuredFileLoader):
             }
             title_stack = []
             title_level_list = self.text_splitter.get_seperators()
+            x0, y0, x1, y1 = 0.1, 0.1, 0.9, 0.9
             for page_num in range(len(doc)):
                 b_unit.set_description("MrjOCRPDFLoader context page index: {}".format(page_num))
                 b_unit.refresh()
                 page = doc.load_page(page_num)
                 page_width = page.rect.width
                 page_height = page.rect.height
-                for block in page.get_text("blocks"):
+                for block_index, block in enumerate(page.get_text("blocks")):
                     matched = False
+                    prev_x0, prev_y0, prev_x1, prev_y1 = x0, y0, x1, y1
+                    prev_page_num = page_num if block_index else page_num - 1
                     x0, y0, x1, y1, txt = block[:5]
                     x0 /= page_width
                     x1 /= page_width
@@ -118,7 +135,7 @@ class MrjOCRPDFLoader(UnstructuredFileLoader):
                         if match:
                             # 手动维护一个标题栈
                             loc_dict['page_no'], loc_dict['right_bottom']['x'], loc_dict['right_bottom']['y'] = \
-                                page_num+1,max(x1, loc_dict['right_bottom']['x']),y1
+                                prev_page_num+1,max(prev_x1, loc_dict['right_bottom']['x']),prev_y1
                             metadata['content_pos'].append(deepcopy(loc_dict))
                             docs = create_documents(chapter=chapter, 
                                                 title_stack=title_stack, 
@@ -141,15 +158,16 @@ class MrjOCRPDFLoader(UnstructuredFileLoader):
                             matched = True
                             break
                     if not matched:
-                        loc_dict['page_no'], loc_dict['right_bottom']['x']  = page_num+1,max(x1, loc_dict['right_bottom']['x'])
                         if len(chapter) < CHUNK_SIZE:
                             # 如果chunk size不满，继续增大end y
                             # 因为只有这一种可能会在page结尾append坐标信息，page结尾append的坐标信息必须是
                             # 当前页面左上和右下的坐标，来标记这一整页都被包含
-                            loc_dict['right_bottom']['y'] = max(y1, loc_dict['right_bottom']['y']) 
+                            loc_dict['page_no'], loc_dict['right_bottom']['x'], loc_dict['right_bottom']['y'] = \
+                                page_num+1,max(x1, loc_dict['right_bottom']['x']), max(y1, loc_dict['right_bottom']['y']) 
                             chapter += "\n" + post_split(text=txt)
                         else:
-                            loc_dict['right_bottom']['y'] = y1 # chunk size到了要截断，则end y必须是当前位置的y
+                            loc_dict['page_no'], loc_dict['right_bottom']['x'], loc_dict['right_bottom']['y'] = \
+                                prev_page_num+1,max(prev_x1, loc_dict['right_bottom']['x']), prev_y1 # chunk size到了要截断，则end y必须是当前位置的y
                             metadata['content_pos'].append(deepcopy(loc_dict))
                             docs = create_documents(chapter=chapter, 
                                                     title_stack=title_stack, 
@@ -172,11 +190,11 @@ class MrjOCRPDFLoader(UnstructuredFileLoader):
         text = pdf2text(self.file_path)
         for chapter in text:
             chapter.metadata['source'] = self.file_path
-        # new_next = []
-        # for sub_text in text:
-        #     new_next.append([len(sub_text.page_content), sub_text.metadata, sub_text.page_content])    
-        # with open("/home/cc007/cc/chat_doc/document_loaders/111.json", 'w') as f:
-        #     json.dump(new_next, f, ensure_ascii=False, indent=4)
+        new_next = []
+        for sub_text in text:
+            new_next.append([len(sub_text.page_content), sub_text.metadata, sub_text.page_content])    
+        with open("/home/cc007/cc/chat_doc/document_loaders/111.json", 'w') as f:
+            json.dump(new_next, f, ensure_ascii=False, indent=4)
         
         return text
 
