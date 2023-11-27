@@ -7,7 +7,7 @@ import os
 MODEL_ROOT_PATH = "/mnt/ddata/models"
 
 # 选用的 Embedding 名称
-EMBEDDING_MODEL = "m3e-base" # bge-large-zh
+EMBEDDING_MODEL = "bge-large-zh-v1.5" # bge-large-zh
 
 # Embedding 模型运行设备。设为"auto"会自动检测，也可手动设定为"cuda","mps","cpu"其中之一。
 EMBEDDING_DEVICE = "auto"

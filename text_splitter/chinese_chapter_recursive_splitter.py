@@ -99,8 +99,8 @@ class ChineseChapterRecursiveSplitter(RecursiveCharacterTextSplitter):
             # print("根据中文标题等级切分文本")
             super().__init__(keep_separator=keep_separator, **kwargs)
             self._separators = separators or [
-                                              r'\b第[一二三四五六七八九十]{1,2}[章]', 
-                                              r'\b第[一二三四五六七八九十]{1,2}[节]', 
+                                              r'\b第(?:[一二三四五六七八九十]{1,2}|\d+)[章]', 
+                                              r'\b第(?:[一二三四五六七八九十]{1,2}|\d+)[节]', 
                                               r'\b[一二三四五六七八九十]{1,2}[、.]'
                                             #   r'\b\d+[.、]\s*[^\n]+'
                                             #   r'\b\([一二三四五六七八九十]{1,2}\)'
