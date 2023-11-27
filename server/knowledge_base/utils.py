@@ -38,7 +38,7 @@ def get_doc_path(knowledge_base_name: str):
     return os.path.join(get_kb_path(knowledge_base_name), "content")
 
 def get_word_doc_path(knowledge_base_name: str):
-    return os.path.join(get_kb_path(knowledge_base_name), "raw")
+    return os.path.join(get_kb_path(knowledge_base_name), "content")
 
 
 def get_vs_path(knowledge_base_name: str, vector_name: str):

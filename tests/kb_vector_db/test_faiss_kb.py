@@ -13,7 +13,8 @@ import shutil
 os.environ["CUDA_VISIBLE_DEVICES"] = "7"
 kbService = FaissKBService("test")
 test_kb_name = "test"
-test_file_name = "陕汽-新M3000S维修手册 第二部分.pdf"
+# test_file_name = "陕汽-新M3000S维修手册 第二部分.pdf"
+test_file_name = "X5000 故障维修(1).docx"
 testKnowledgeFile = KnowledgeFile(test_file_name, test_kb_name)
 search_content = "驱动车桥的速比数据表"
 

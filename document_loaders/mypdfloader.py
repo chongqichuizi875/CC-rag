@@ -164,9 +164,10 @@ class MrjOCRPDFLoader(UnstructuredFileLoader):
                 metadata['content_pos'].append(deepcopy(loc_dict))
                 b_unit.update(1)
             return resp
-        # if self.file_path[-5:] == ".docx":
-        #     doc2pdf(self.file_path)
-        #     self.file_path = self.file_path[-5:] + ".pdf"
+        if self.file_path[-5:] == ".docx":
+            from server.knowledge_base.word2pdf import doc2pdf
+            doc2pdf(self.file_path)
+            self.file_path = self.file_path[:-5] + ".pdf"
             
         text = pdf2text(self.file_path)
         for chapter in text:
