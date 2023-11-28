@@ -14,7 +14,7 @@ os.environ["CUDA_VISIBLE_DEVICES"] = "7"
 kbService = FaissKBService("test")
 test_kb_name = "test"
 # test_file_name = "陕汽-新M3000S维修手册 第二部分.pdf"
-test_file_name = "X5000 故障维修(1).docx"
+test_file_name = "陕汽L3000系列载货车维修手册（第二部分）.docx"
 testKnowledgeFile = KnowledgeFile(test_file_name, test_kb_name)
 search_content = "驱动车桥的速比数据表"
 
@@ -55,7 +55,9 @@ def test_clear_emb():
 import json
 with open("/home/cc007/cc/chat_doc/tests/kb_vector_db/query.json", "r") as f:
     queries = json.load(f)
-
+queries = {
+    "冷却水温度传感器的特性参数":38
+}
 d = list()
 
 
@@ -83,7 +85,8 @@ for query, index in queries.items():
         if answers[0][0].metadata['content_pos'][0]['page_no'] <= index <= answers[0][0].metadata['content_pos'][-1]['page_no']:
             accurate += 1
         else:
-            print(f"正确：{index}, 回答区间[{answers[0][0].metadata['content_pos'][0]['page_no']}, {answers[0][0].metadata['content_pos'][0]['page_no']}]")
+            print(f"正确：{index}, 回答区间[{answers[0][0].metadata['content_pos'][0]['page_no']}, {answers[0][0].metadata['content_pos'][-1]['page_no']}]")
+            print(f"答案：{answers[0][0].page_content}")
         d.append({"page":index, 
               "query": query,
               "answer":answer_list,
