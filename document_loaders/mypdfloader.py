@@ -190,11 +190,11 @@ class MrjOCRPDFLoader(UnstructuredFileLoader):
         text = pdf2text(self.file_path)
         for chapter in text:
             chapter.metadata['source'] = self.file_path
-        # new_next = []
-        # for sub_text in text:
-        #     new_next.append([len(sub_text.page_content), sub_text.metadata['content_pos'][0]['page_no'], sub_text.metadata['content_pos'][-1]['page_no'], sub_text.page_content])    
-        # with open("/home/cc007/cc/chat_doc/document_loaders/111.json", 'w') as f:
-        #     json.dump(new_next, f, ensure_ascii=False, indent=4)
+        new_next = []
+        for sub_text in text:
+            new_next.append([len(sub_text.page_content), sub_text.metadata['content_pos'][0]['page_no'], sub_text.metadata['content_pos'][-1]['page_no'], sub_text.page_content])    
+        with open("/home/cc007/cc/chat_doc/document_loaders/111.json", 'w') as f:
+            json.dump(new_next, f, ensure_ascii=False, indent=4)
         
         return text
 
