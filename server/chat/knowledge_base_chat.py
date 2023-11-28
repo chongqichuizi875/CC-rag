@@ -173,13 +173,23 @@ async def knowledge_base_chat(query: str = Body(..., description="用户输入",
             source_documents.append(f"""<span style='color:red'>未找到相关文档,该回答为大模型自身能力解答！</span>""")
 
         token_index =0
+        
+        valid_token = True
         if stream:
             async for token in callback.aiter():
                 # Use server-sent-events to stream the response
                 token_index +=1
                 if token_index ==1:
                     t3 = time.time()*1000
-                yield json.dumps({"answer": token}, ensure_ascii=False)
+                    
+                if valid_token == False:
+                    if len(token.split()) == 0:
+                        pass
+                    else :
+                        valid_token = True
+                        yield json.dumps({"answer": token.lstrip()}, ensure_ascii=False)
+                else:
+                    yield json.dumps({"answer": token}, ensure_ascii=False)
             # yield json.dumps({"docs": source_documents}, ensure_ascii=False)
             t4 = time.time()*1000
             print(">>>",str(t2-t1),str(t3-t2),str(t4-t3))
