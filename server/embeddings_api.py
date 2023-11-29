@@ -58,13 +58,15 @@ def embed_documents(
     """
     将 List[Document] 向量化，转化为 VectorStore.add_embeddings 可以接受的参数
     """
-    texts = [
+    temp_texts = [
              (x.metadata['titles'] if 'titles' in x.metadata else '') + # 标题增强
              (' '.join(x.metadata['image_and_table']) if 'image_and_table' in x.metadata else '') + # 图表增强
              (' '.join(x.metadata['keyword']) if 'keyword' in x.metadata else '') + # 关键词增强
              x.page_content for x in docs]
+    
+    texts = [x.page_content for x in docs]
     metadatas = [x.metadata for x in docs]
-    embeddings = embed_texts(texts=texts, embed_model=embed_model, to_query=to_query).data
+    embeddings = embed_texts(texts=temp_texts, embed_model=embed_model, to_query=to_query).data
     if embeddings is not None:
         return {
             "texts": texts,
