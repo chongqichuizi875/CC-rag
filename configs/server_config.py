@@ -97,30 +97,30 @@ FSCHAT_MODEL_WORKERS = {
     # },
 
     #以下配置可以不用修改，在model_config中设置启动的模型
-    "zhipu-api": {
-        "port": 21001,
-    },
-    "minimax-api": {
-        "port": 21002,
-    },
-    "xinghuo-api": {
-        "port": 21003,
-    },
-    "qianfan-api": {
-        "port": 21004,
-    },
-    "fangzhou-api": {
-        "port": 21005,
-    },
-    "qwen-api": {
-        "port": 21006,
-    },
-    "baichuan-api": {
-        "port": 21007,
-    },
-    "azure-api": {
-        "port": 21008,
-    },
+    # "zhipu-api": {
+    #     "port": 21001,
+    # },
+    # "minimax-api": {
+    #     "port": 21002,
+    # },
+    # "xinghuo-api": {
+    #     "port": 21003,
+    # },
+    # "qianfan-api": {
+    #     "port": 21004,
+    # },
+    # "fangzhou-api": {
+    #     "port": 21005,
+    # },
+    # "qwen-api": {
+    #     "port": 21006,
+    # },
+    # "baichuan-api": {
+    #     "port": 21007,
+    # },
+    # "azure-api": {
+    #     "port": 21008,
+    # },
 }
 
 # fastchat multi model worker server

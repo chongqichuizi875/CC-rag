@@ -91,8 +91,7 @@ async def knowledge_base_chat(query: str = Body(..., description="用户输入",
             t3 = t2
             t4 = t2
             context = "\n".join([doc.page_content for doc in docs])
-        
-        if len(docs) == 0: ## 如果没有找到相关文档，使用Empty模板
+        if len(context) == 0: ## 如果没有找到相关文档，使用Empty模板
             prompt_template = get_prompt_template("knowledge_base_chat", "Empty")
         else:
             prompt_template = get_prompt_template("knowledge_base_chat", prompt_name)
@@ -181,7 +180,7 @@ async def knowledge_base_chat(query: str = Body(..., description="用户输入",
                 token_index +=1
                 if token_index ==1:
                     t3 = time.time()*1000
-                    
+                print("token:",repr(token))
                 if valid_token == False:
                     if len(token.split()) == 0:
                         pass

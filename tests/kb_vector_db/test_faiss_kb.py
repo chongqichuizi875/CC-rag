@@ -1,6 +1,6 @@
 import sys
 # print(sys.path)
-sys.path.append('/home/cc007/cc/chat_doc')
+sys.path.append('/home/star/projects/chat_doc')
 from server.knowledge_base.kb_service.faiss_kb_service import FaissKBService
 from server.knowledge_base.kb_service.milvus_kb_service import MilvusKBService
 from server.knowledge_base.kb_service.pg_kb_service import PGKBService
@@ -11,10 +11,11 @@ from server.knowledge_base.utils import KnowledgeFile
 import os
 import shutil
 os.environ["CUDA_VISIBLE_DEVICES"] = "7"
-kbService = FaissKBService("test")
-test_kb_name = "test"
+kbService = FaissKBService("lb_test")
+test_kb_name = "lb_test"
 # test_file_name = "陕汽-新M3000S维修手册 第二部分.pdf"
-test_file_name = "陕汽L3000系列载货车维修手册（第二部分）.docx"
+# test_file_name = "陕汽L3000系列载货车维修手册（第二部分）.docx"
+test_file_name = "陕汽-重卡X5000维修手册（第一部分）.pdf"
 testKnowledgeFile = KnowledgeFile(test_file_name, test_kb_name)
 search_content = "驱动车桥的速比数据表"
 
@@ -48,21 +49,24 @@ def test_delete_db(kbService):
     assert kbService.drop_kb()
 
 def test_clear_emb():
-    emb_path = f"/home/cc007/cc/chat_doc/knowledge_base/{test_kb_name}/vector_store"
+    emb_path = f"knowledge_base/{test_kb_name}/vector_store"
     if os.path.exists(emb_path):
         shutil.rmtree(emb_path)
 
 import json
-with open("/home/cc007/cc/chat_doc/tests/kb_vector_db/query.json", "r") as f:
+with open("tests/kb_vector_db/query.json", "r") as f:
     queries = json.load(f)
 queries = {
-    "冷却水温度传感器的特性参数":38
+    "X5000的配的发动机型号":38,
+    "WP10H 系列发动机技术参数":1,
+    "WP11S 系列发动机技术参数":1,
+    "WP13G 系列发动机技术参数":1
 }
 d = list()
 
 
 # faiss的swigfaiss的indexflat.search是向量的L2距离和余弦距离
-test_kb_name = "test"
+test_kb_name = "lb_test"
 kbService = FaissKBService(test_kb_name)
 # test_delete_db(kbService)
 # test_create_db(kbService)
@@ -85,15 +89,18 @@ for query, index in queries.items():
         if answers[0][0].metadata['content_pos'][0]['page_no'] <= index <= answers[0][0].metadata['content_pos'][-1]['page_no']:
             accurate += 1
         else:
+            
             print(f"正确：{index}, 回答区间[{answers[0][0].metadata['content_pos'][0]['page_no']}, {answers[0][0].metadata['content_pos'][-1]['page_no']}]")
-            print(f"答案：{answers[0][0].page_content}")
+            print(f"得分：{answers[0][1]}")
+            print(f"key word：{answers[0][0].metadata}")
+            print(f"答案：{repr(answers[0][0].page_content)}")
         d.append({"page":index, 
               "query": query,
               "answer":answer_list,
               "len":length})
 accuracy = accurate / len(queries)    
 print(f"accuracy: {accuracy}")          
-with open("/home/cc007/cc/chat_doc/tests/kb_vector_db/answer.json", "w", encoding='utf-8') as f:
+with open("/home/star/projects/chat_doc/tests/kb_vector_db/answer.json", "w", encoding='utf-8') as f:
     json.dump(d, f, ensure_ascii=False, indent=4)
 # retrival_list[i][1]是相似度分数, retrival_list[i][0].page_content是文本, retrival_list[i][0].metadata['source']是source
 

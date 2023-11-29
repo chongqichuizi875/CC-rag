@@ -312,6 +312,6 @@ class RapidOCRPDFLoader(UnstructuredFileLoader):
 
 
 if __name__ == "__main__":
-    loader = MrjOCRPDFLoader(file_path="/home/cc007/cc/Langchain-Chatchat/knowledge_base/test/content/陕汽-重卡X5000维修手册（第二部分）.pdf")
+    loader = MrjOCRPDFLoader(file_path="knowledge_base/lb_test/content/陕汽-重卡X5000维修手册（第一部分）.pdf")
     docs = loader.load()
     print(docs)
