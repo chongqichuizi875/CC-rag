@@ -43,7 +43,7 @@ def create_documents(chapter, title_stack, title_prefix, metadata: dict) -> List
     metadata['keyword'] = []
     
     chapter = post_split(text=chapter)
-    pattern = r"[图|表]\s+\d+-\d+\s+[^，。；！？：“”‘’（）《》&#8203;``【oaicite:0】``&#8203;、\n]*\n" # 提取图和表
+    pattern = r"\b[图|表]\s+\d+-\d+\s+[^，。；！？：“”‘’（）《》&#8203;``【oaicite:0】``&#8203;、\n]*\n" # 提取图和表
     matches = re.findall(pattern, chapter)
     if matches:
         for match in matches:
@@ -82,7 +82,9 @@ def post_split(text):
 
 def remove_newlines_between_chinese(text):
     # 正则表达式，匹配两个汉字之间的换行符，但是如果其中一个汉字是'图'或者'表'则不管
-    pattern = re.compile(r'((?![图表])[\u4e00-\u9fa5])(\s+)((?![图表])[\u4e00-\u9fa5])')
+    # pattern = re.compile(r'((?![图表])[\u4e00-\u9fa5])(\s+)((?![图表])[\u4e00-\u9fa5])')
+    pattern = re.compile(r'(?<=[^\W\d图表])\s+(?=[^\W\d图表])')
+    return pattern.sub(r'', text).strip()
     return pattern.sub(r'\1\2', text).strip()
 
 class MrjOCRPDFLoader(UnstructuredFileLoader):
@@ -164,7 +166,7 @@ class MrjOCRPDFLoader(UnstructuredFileLoader):
                             # 当前页面左上和右下的坐标，来标记这一整页都被包含
                             loc_dict['page_no'], loc_dict['right_bottom']['x'], loc_dict['right_bottom']['y'] = \
                                 page_num+1,max(x1, loc_dict['right_bottom']['x']), max(y1, loc_dict['right_bottom']['y']) 
-                            chapter += "\n" + post_split(text=txt)
+                            chapter += post_split(text=txt)
                         else:
                             loc_dict['page_no'], loc_dict['right_bottom']['x'], loc_dict['right_bottom']['y'] = \
                                 prev_page_num+1,max(prev_x1, loc_dict['right_bottom']['x']), prev_y1 # chunk size到了要截断，则end y必须是当前位置的y
@@ -190,11 +192,11 @@ class MrjOCRPDFLoader(UnstructuredFileLoader):
         text = pdf2text(self.file_path)
         for chapter in text:
             chapter.metadata['source'] = self.file_path
-        # new_next = []
-        # for sub_text in text:
-        #     new_next.append([len(sub_text.page_content), sub_text.metadata['content_pos'][0]['page_no'], sub_text.metadata['content_pos'][-1]['page_no'], sub_text.page_content])    
-        # with open("/home/cc007/cc/chat_doc/document_loaders/111.json", 'w') as f:
-        #     json.dump(new_next, f, ensure_ascii=False, indent=4)
+        new_next = []
+        for sub_text in text:
+            new_next.append([len(sub_text.page_content), sub_text.metadata['content_pos'][0]['page_no'], sub_text.metadata['content_pos'][-1]['page_no'], sub_text.page_content])    
+        with open("/home/cc007/cc/chat_doc/document_loaders/111.json", 'w') as f:
+            json.dump(new_next, f, ensure_ascii=False, indent=4)
         
         return text
 
@@ -263,6 +265,6 @@ class RapidOCRPDFLoader(UnstructuredFileLoader):
 
 
 if __name__ == "__main__":
-    loader = MrjOCRPDFLoader(file_path="/home/cc007/cc/Langchain-Chatchat/knowledge_base/test/content/陕汽-新M3000S维修手册 第二部分.pdf")
+    loader = MrjOCRPDFLoader(file_path="/home/cc007/cc/Langchain-Chatchat/knowledge_base/test/content/陕汽-重卡X5000维修手册（第二部分）.pdf")
     docs = loader.load()
-    # print(docs)
+    print(docs)
