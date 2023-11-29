@@ -1,5 +1,5 @@
 import sys
-sys.path.append("/home/cc007/cc/chat_doc")
+sys.path.append("./")
 from typing import Any, List, Union
 from langchain.document_loaders.unstructured import UnstructuredFileLoader
 import tqdm
@@ -20,6 +20,18 @@ key_word_dict = {
     "使用":"使用",
     "步骤":"步骤"
 }
+
+def in_table_index(location, tables):
+    if not tables:
+        return -1
+    x0, y0, x1, y1 = location
+    boundings = [table.bbox for table in tables]
+    for index, bounding in enumerate(boundings):
+        b_x0, b_y0, b_x1, b_y1 = bounding
+        if b_x0 < x0 and b_y0 < y0 and b_x1 > x1 and b_y1 > y1:
+            return index
+    return -1
+
 
 def remove_special_chars(text:str) -> str:
     special_chars = r"[-.]{2,}|[■…]"
@@ -94,11 +106,12 @@ class MrjOCRPDFLoader(UnstructuredFileLoader):
     def _get_elements(self) -> List:
         # 流式匹配，手动维护标题栈
         def pdf2text(filepath):
-            import fitz
-            doc = fitz.open(filepath)
-            b_unit = tqdm.tqdm(total=doc.page_count, desc="MrjOCRPDFLoader context page index: 0")
+            import pdfplumber
+            pages = pdfplumber.open(filepath).pages
+            b_unit = tqdm.tqdm(total=len(pages), desc="MrjOCRPDFLoader context page index: 0")
             resp = []
             chapter = ""
+            prev_chapter = chapter
             metadata = dict()
             metadata['content_pos'] = []
             loc_dict = {}
@@ -114,22 +127,53 @@ class MrjOCRPDFLoader(UnstructuredFileLoader):
             }
             title_stack = []
             title_level_list = self.text_splitter.get_seperators()
-            x0, y0, x1, y1 = 0.1, 0.1, 0.9, 0.9
-            for page_num in range(len(doc)):
+            txt, x0, y0, x1, y1 = '', 0.1, 0.1, 0.9, 0.9
+            for page_num in range(len(pages)):
                 b_unit.set_description("MrjOCRPDFLoader context page index: {}".format(page_num))
                 b_unit.refresh()
-                page = doc.load_page(page_num)
-                page_width = page.rect.width
-                page_height = page.rect.height
-                for block_index, block in enumerate(page.get_text("blocks")):
+                page = pages[page_num]
+                page_width = page.width
+                page_height = page.height
+                tables = page.find_tables() # 如果没有tables就是[]
+                added_tables = []
+                for line_num, line in enumerate(page.extract_text_lines()):
                     matched = False
-                    prev_x0, prev_y0, prev_x1, prev_y1 = x0, y0, x1, y1
-                    prev_page_num = page_num if block_index else page_num - 1
-                    x0, y0, x1, y1, txt = block[:5]
-                    x0 /= page_width
-                    x1 /= page_width
-                    y0 /= page_height
-                    y1 /= page_height
+                    prev_txt, prev_x0, prev_y0, prev_x1, prev_y1 = txt, x0, y0, x1, y1
+                    prev_page_num = page_num if line_num else page_num - 1
+                    txt, ori_x0, ori_y0, ori_x1, ori_y1 = line["text"],line["x0"],line["top"],line["x1"],line["bottom"]
+                    if txt.isdigit():
+                        txt, x0, y0, x1, y1 = prev_txt, prev_x0, prev_y0, prev_x1, prev_y1
+                        continue
+                    table_index = in_table_index((ori_x0, ori_y0, ori_x1, ori_y1), tables)
+                    x0 = ori_x0/page_width
+                    x1 = ori_x1/page_width
+                    y0 = ori_y0/page_height
+                    y1 = ori_y1/page_height
+                    if table_index != -1:
+                        if table_index in added_tables:
+                            continue
+
+                        added_tables.append(table_index)
+                        chapter += ' ' + str(tables[table_index].extract())
+                        loc_dict['page_no'], loc_dict['right_bottom']['x'], loc_dict['right_bottom']['y'] = \
+                            page_num+1,tables[table_index].bbox[2]/page_width,tables[table_index].bbox[3]/page_height
+                        loc_dict['left_top']['x'], loc_dict['left_top']['y'] = \
+                                tables[table_index].bbox[0]/page_width,tables[table_index].bbox[1]/page_height
+                        if chapter[:3] == ' [[':
+                            chapter = prev_chapter + chapter
+                            resp.pop()
+                        metadata['content_pos'].append(deepcopy(loc_dict))
+                        docs = create_documents(chapter=chapter, 
+                                            title_stack=title_stack, 
+                                            title_prefix=self.text_splitter.title_prefix,
+                                            metadata=metadata)
+                        resp.extend(docs)
+                        prev_chapter = chapter
+                        chapter = ""
+                        metadata['content_pos'] = []
+                        loc_dict['page_no'], loc_dict['left_top']['x'], loc_dict['left_top']['y'], loc_dict['right_bottom']['x'], loc_dict['right_bottom']['y'] = \
+                        page_num+1,tables[table_index].bbox[0]/page_width,tables[table_index].bbox[1]/page_height,tables[table_index].bbox[2]/page_width,tables[table_index].bbox[3]/page_height
+                        continue
                     loc_dict['left_top']['x'], loc_dict['left_top']['y'] = \
                         min(x0, loc_dict['left_top']['x']), min(y0, loc_dict['left_top']['y'])
                     for title_level, title in enumerate(title_level_list):
@@ -144,6 +188,7 @@ class MrjOCRPDFLoader(UnstructuredFileLoader):
                                                 title_prefix=self.text_splitter.title_prefix,
                                                 metadata=metadata)
                             resp.extend(docs)
+                            prev_chapter = chapter
                             chapter = ""
                             metadata['content_pos'] = []
                             loc_dict['page_no'], loc_dict['left_top']['x'], loc_dict['left_top']['y'], loc_dict['right_bottom']['x'], loc_dict['right_bottom']['y'] = \
@@ -155,8 +200,8 @@ class MrjOCRPDFLoader(UnstructuredFileLoader):
                                 title_stack.append('')
                             cur_line = txt[match.end():]
                             title_pos = potential_title_pos(cur_line)
-                            title_stack.append(cur_line[:title_pos])
-                            chapter += "\n" + cur_line[title_pos:]
+                            title_stack.append(cur_line)
+                            # chapter += "\n" + cur_line[title_pos:]
                             matched = True
                             break
                     if not matched:
@@ -176,6 +221,7 @@ class MrjOCRPDFLoader(UnstructuredFileLoader):
                                                     title_prefix=self.text_splitter.title_prefix,
                                                     metadata=metadata)
                             resp.extend(docs)
+                            prev_chapter = chapter
                             chapter = post_split(text=txt)
                             metadata['content_pos'] = []
                             loc_dict['page_no'], loc_dict['left_top']['x'], loc_dict['left_top']['y'], loc_dict['right_bottom']['x'], loc_dict['right_bottom']['y'] = \
@@ -183,6 +229,7 @@ class MrjOCRPDFLoader(UnstructuredFileLoader):
 
                 metadata['content_pos'].append(deepcopy(loc_dict))
                 b_unit.update(1)
+            
             return resp
         if self.file_path[-5:] == ".docx":
             from server.knowledge_base.word2pdf import doc2pdf
@@ -194,8 +241,8 @@ class MrjOCRPDFLoader(UnstructuredFileLoader):
             chapter.metadata['source'] = self.file_path
         new_next = []
         for sub_text in text:
-            new_next.append([len(sub_text.page_content), sub_text.metadata['content_pos'][0]['page_no'], sub_text.metadata['content_pos'][-1]['page_no'], sub_text.page_content])    
-        with open("/home/cc007/cc/chat_doc/document_loaders/111.json", 'w') as f:
+            new_next.append([len(sub_text.page_content), sub_text.metadata, sub_text.page_content])    
+        with open("document_loaders/111.json", 'w') as f:
             json.dump(new_next, f, ensure_ascii=False, indent=4)
         
         return text
