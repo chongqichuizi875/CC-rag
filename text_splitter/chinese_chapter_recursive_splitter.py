@@ -102,7 +102,7 @@ class ChineseChapterRecursiveSplitter(RecursiveCharacterTextSplitter):
                                               r'\b第\s*(?:[一二三四五六七八九十]{1,2}|\d+)\s*[章]', 
                                               r'\b第\s*(?:[一二三四五六七八九十]{1,2}|\d+)\s*[节]', 
                                               r'\b[一二三四五六七八九十]{1,2}[、.]',
-                                              r'\b\d+(?:\.\s+|、\s*)',
+                                              r'\b\d+\.\s+',
                                               r'\b\d+\.\d+\s+'
                                             #   r'\b\d+(\.\d+)+\s*'
                                               r'\b\([一二三四五六七八九十]{1,2}\)'
