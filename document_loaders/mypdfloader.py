@@ -177,6 +177,8 @@ class MrjOCRPDFLoader(UnstructuredFileLoader):
                         if chapter[:3] == ' [[' and prev_chapter and prev_chapter[-2:] == ']]':
                             chapter = prev_chapter + chapter
                             resp.pop()
+                            if metadata['content_pos'] and metadata['content_pos'][-1]['page_no'] == loc_dict['page_no']:
+                                metadata['content_pos'].pop()
                             metadata['content_pos'].append(deepcopy(loc_dict)) # 合并跨页表格的坐标
                         else:
                             metadata['content_pos'] = [deepcopy(loc_dict)] # 一页内表格的坐标
@@ -201,6 +203,8 @@ class MrjOCRPDFLoader(UnstructuredFileLoader):
                             # 手动维护一个标题栈
                             loc_dict['page_no'], loc_dict['right_bottom']['x'], loc_dict['right_bottom']['y'] = \
                                 prev_page_num+1,max(prev_x1, loc_dict['right_bottom']['x']),prev_y1
+                            if metadata['content_pos'] and metadata['content_pos'][-1]['page_no'] == loc_dict['page_no']:
+                                metadata['content_pos'].pop()
                             metadata['content_pos'].append(deepcopy(loc_dict))
                             docs = create_documents(chapter=chapter, 
                                                 title_stack=title_stack, 
@@ -237,6 +241,8 @@ class MrjOCRPDFLoader(UnstructuredFileLoader):
                         else:
                             loc_dict['page_no'], loc_dict['right_bottom']['x'], loc_dict['right_bottom']['y'] = \
                                 prev_page_num+1,max(prev_x1, loc_dict['right_bottom']['x']), prev_y1 # chunk size到了要截断，则end y必须是当前位置的y
+                            if metadata['content_pos'] and metadata['content_pos'][-1]['page_no'] == loc_dict['page_no']:
+                                metadata['content_pos'].pop()
                             metadata['content_pos'].append(deepcopy(loc_dict))
                             docs = create_documents(chapter=chapter, 
                                                     title_stack=title_stack, 
@@ -248,7 +254,8 @@ class MrjOCRPDFLoader(UnstructuredFileLoader):
                             metadata['content_pos'] = []
                             loc_dict['page_no'], loc_dict['left_top']['x'], loc_dict['left_top']['y'], loc_dict['right_bottom']['x'], loc_dict['right_bottom']['y'] = \
                                 page_num+1,x0,y0,x1,y1
-
+                if metadata['content_pos'] and metadata['content_pos'][-1]['page_no'] == loc_dict['page_no']:
+                    metadata['content_pos'].pop()
                 metadata['content_pos'].append(deepcopy(loc_dict))
                 b_unit.update(1)
             
