@@ -44,6 +44,8 @@ def potential_title_pos(text):
     index_of_newline = text.find('\n')
     return index_of_newline
 
+
+
 def create_documents(chapter, title_stack, title_prefix, metadata: dict) -> List[Document]:
     prefix = ""
     for i, sub_title in enumerate(title_stack):
@@ -51,15 +53,15 @@ def create_documents(chapter, title_stack, title_prefix, metadata: dict) -> List
             prefix += title_prefix*i+sub_title
     prefix = re.sub(r'\s+', '', prefix)
     metadata['titles'] = prefix
-    metadata['image_and_table'] = []
+    # metadata['image_and_table'] = []
     metadata['keyword'] = []
     
     chapter = post_split(text=chapter)
-    pattern = r"\b[图|表]\s+\d+-\d+\s+[^，。；！？：“”‘’（）《》&#8203;``【oaicite:0】``&#8203;、\n]*\n" # 提取图和表
-    matches = re.findall(pattern, chapter)
-    if matches:
-        for match in matches:
-            metadata['image_and_table'].append(match.strip())
+    # pattern = r"\b[图|表]\s*\d+-\d+\s+[^，。；！？：“”‘’（）《》&#8203;``【oaicite:0】``&#8203;、\n]*\n" # 提取图和表
+    # matches = re.findall(pattern, chapter)
+    # if matches:
+    #     for match in matches:
+    #         metadata['image_and_table'].append(match.strip())
     for key, value in key_word_dict.items():
         if re.findall(key, chapter):
             metadata['keyword'].append(value)
@@ -114,6 +116,7 @@ class MrjOCRPDFLoader(UnstructuredFileLoader):
             prev_chapter = chapter
             metadata = dict()
             metadata['content_pos'] = []
+            metadata['image_and_table'] = []
             loc_dict = {}
             loc_dict['page_no'] = 0
             # 初始化开始和结束的x坐标，为了求一段中开始(结束)值的最值
@@ -149,7 +152,11 @@ class MrjOCRPDFLoader(UnstructuredFileLoader):
                     x1 = ori_x1/page_width
                     y0 = ori_y0/page_height
                     y1 = ori_y1/page_height
-                    if table_index != -1:
+                    image_and_table_pattern = r"\n\b[图|表]\s*\d+-\d+\s+[^，。；！？：“”‘’（）《》&#8203;``【oaicite:0】``&#8203;、\n]*\n" # 提取图和表
+                    if re.findall(image_and_table_pattern, '\n'+txt+'\n'):
+                        metadata['image_and_table'].append(txt)
+                        continue
+                    if table_index != -1: # 查找是否在table里
                         if table_index in added_tables:
                             continue
 
@@ -205,13 +212,13 @@ class MrjOCRPDFLoader(UnstructuredFileLoader):
                             matched = True
                             break
                     if not matched:
-                        if len(chapter) < CHUNK_SIZE:
+                        if len(chapter) < CHUNK_SIZE or prev_txt[-1] != '。':
                             # 如果chunk size不满，继续增大end y
                             # 因为只有这一种可能会在page结尾append坐标信息，page结尾append的坐标信息必须是
                             # 当前页面左上和右下的坐标，来标记这一整页都被包含
                             loc_dict['page_no'], loc_dict['right_bottom']['x'], loc_dict['right_bottom']['y'] = \
                                 page_num+1,max(x1, loc_dict['right_bottom']['x']), max(y1, loc_dict['right_bottom']['y']) 
-                            chapter += post_split(text=txt)
+                            chapter += post_split(text=txt) + '\n'
                         else:
                             loc_dict['page_no'], loc_dict['right_bottom']['x'], loc_dict['right_bottom']['y'] = \
                                 prev_page_num+1,max(prev_x1, loc_dict['right_bottom']['x']), prev_y1 # chunk size到了要截断，则end y必须是当前位置的y
@@ -312,6 +319,6 @@ class RapidOCRPDFLoader(UnstructuredFileLoader):
 
 
 if __name__ == "__main__":
-    loader = MrjOCRPDFLoader(file_path="knowledge_base/lb_test/content/陕汽-重卡X5000维修手册（第一部分）.pdf")
+    loader = MrjOCRPDFLoader(file_path="/home/cc007/cc/Langchain-Chatchat/knowledge_base/test/content/陕汽-重卡X5000维修手册（第一部分）.pdf")
     docs = loader.load()
-    print(docs)
+    # print(docs)

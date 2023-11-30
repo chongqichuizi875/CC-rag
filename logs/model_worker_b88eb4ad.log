@@ -1,33 +1,0 @@
-2023-11-15 09:05:42 | INFO | model_worker | Loading the model ['chatglm2-6b'] on worker b88eb4ad ...
-2023-11-15 09:06:33 | ERROR | stderr | Loading checkpoint shards:   0%|                                                                                                                 | 0/7 [00:00<?, ?it/s]
-2023-11-15 09:06:37 | ERROR | stderr | Loading checkpoint shards:  14%|███████████████                                                                                          | 1/7 [00:03<00:23,  3.84s/it]
-2023-11-15 09:06:39 | ERROR | stderr | Loading checkpoint shards:  29%|██████████████████████████████                                                                           | 2/7 [00:05<00:13,  2.62s/it]
-2023-11-15 09:06:40 | ERROR | stderr | Loading checkpoint shards:  29%|██████████████████████████████                                                                           | 2/7 [00:06<00:16,  3.38s/it]
-2023-11-15 09:06:40 | ERROR | stderr | 
-2023-11-15 09:06:40 | ERROR | stderr | Process model_worker - chatglm2-6b:
-2023-11-15 09:06:40 | ERROR | stderr | Traceback (most recent call last):
-2023-11-15 09:06:40 | ERROR | stderr |   File "/usr/local/anaconda3/envs/lc/lib/python3.10/multiprocessing/process.py", line 314, in _bootstrap
-2023-11-15 09:06:40 | ERROR | stderr |     self.run()
-2023-11-15 09:06:40 | ERROR | stderr |   File "/usr/local/anaconda3/envs/lc/lib/python3.10/multiprocessing/process.py", line 108, in run
-2023-11-15 09:06:40 | ERROR | stderr |     self._target(*self._args, **self._kwargs)
-2023-11-15 09:06:40 | ERROR | stderr |   File "/home/cc007/cc/Langchain-Chatchat/startup.py", line 382, in run_model_worker
-2023-11-15 09:06:40 | ERROR | stderr |     app = create_model_worker_app(log_level=log_level, **kwargs)
-2023-11-15 09:06:40 | ERROR | stderr |   File "/home/cc007/cc/Langchain-Chatchat/startup.py", line 210, in create_model_worker_app
-2023-11-15 09:06:40 | ERROR | stderr |     worker = ModelWorker(
-2023-11-15 09:06:40 | ERROR | stderr |   File "/usr/local/anaconda3/envs/lc/lib/python3.10/site-packages/fastchat/serve/model_worker.py", line 74, in __init__
-2023-11-15 09:06:40 | ERROR | stderr |     self.model, self.tokenizer = load_model(
-2023-11-15 09:06:40 | ERROR | stderr |   File "/usr/local/anaconda3/envs/lc/lib/python3.10/site-packages/fastchat/model/model_adapter.py", line 306, in load_model
-2023-11-15 09:06:40 | ERROR | stderr |     model, tokenizer = adapter.load_model(model_path, kwargs)
-2023-11-15 09:06:40 | ERROR | stderr |   File "/usr/local/anaconda3/envs/lc/lib/python3.10/site-packages/fastchat/model/model_adapter.py", line 733, in load_model
-2023-11-15 09:06:40 | ERROR | stderr |     model = AutoModel.from_pretrained(
-2023-11-15 09:06:40 | ERROR | stderr |   File "/usr/local/anaconda3/envs/lc/lib/python3.10/site-packages/transformers/models/auto/auto_factory.py", line 561, in from_pretrained
-2023-11-15 09:06:40 | ERROR | stderr |     return model_class.from_pretrained(
-2023-11-15 09:06:40 | ERROR | stderr |   File "/usr/local/anaconda3/envs/lc/lib/python3.10/site-packages/transformers/modeling_utils.py", line 3480, in from_pretrained
-2023-11-15 09:06:40 | ERROR | stderr |     ) = cls._load_pretrained_model(
-2023-11-15 09:06:40 | ERROR | stderr |   File "/usr/local/anaconda3/envs/lc/lib/python3.10/site-packages/transformers/modeling_utils.py", line 3870, in _load_pretrained_model
-2023-11-15 09:06:40 | ERROR | stderr |     new_error_msgs, offload_index, state_dict_index = _load_state_dict_into_meta_model(
-2023-11-15 09:06:40 | ERROR | stderr |   File "/usr/local/anaconda3/envs/lc/lib/python3.10/site-packages/transformers/modeling_utils.py", line 743, in _load_state_dict_into_meta_model
-2023-11-15 09:06:40 | ERROR | stderr |     set_module_tensor_to_device(model, param_name, param_device, **set_module_kwargs)
-2023-11-15 09:06:40 | ERROR | stderr |   File "/usr/local/anaconda3/envs/lc/lib/python3.10/site-packages/accelerate/utils/modeling.py", line 317, in set_module_tensor_to_device
-2023-11-15 09:06:40 | ERROR | stderr |     new_value = value.to(device)
-2023-11-15 09:06:40 | ERROR | stderr | torch.cuda.OutOfMemoryError: CUDA out of memory. Tried to allocate 214.00 MiB. GPU 0 has a total capacty of 23.65 GiB of which 18.81 MiB is free. Process 347479 has 19.09 GiB memory in use. Including non-PyTorch memory, this process has 4.43 GiB memory in use. Of the allocated memory 3.61 GiB is allocated by PyTorch, and 1.78 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting max_split_size_mb to avoid fragmentation.  See documentation for Memory Management and PYTORCH_CUDA_ALLOC_CONF

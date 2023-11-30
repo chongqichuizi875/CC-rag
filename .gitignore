@@ -180,3 +180,11 @@ server/knowledge_base/kb_cache/__pycache__/faiss_cache.cpython-38.pyc
 logs/openai_api.log
 
 knowledge_base/
+configs/*
+**/*.json
+**/*.db
+**/*.pdf
+**/*.docx
+logs/*
+**/*.pkl
+tests/*
