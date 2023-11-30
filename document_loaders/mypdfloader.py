@@ -44,6 +44,13 @@ def potential_title_pos(text):
     index_of_newline = text.find('\n')
     return index_of_newline
 
+def is_title(pattern, string) -> bool:
+    match = re.search(pattern=pattern, string=string)
+    # 判断剩下的一行文本中是否有中文标点符号
+    chinese_punctuation = r'[\u3002\uff0c\uff1b\uff1a\u201c\u201d\uff08\uff09\u300a\u300b\uff1f\uff01\u3001]'
+    if match and not re.search(chinese_punctuation, string[match.end():]):
+        return match
+    return False
 
 
 def create_documents(chapter, title_stack, title_prefix, metadata: dict) -> List[Document]:
@@ -53,15 +60,9 @@ def create_documents(chapter, title_stack, title_prefix, metadata: dict) -> List
             prefix += title_prefix*i+sub_title
     prefix = re.sub(r'\s+', '', prefix)
     metadata['titles'] = prefix
-    # metadata['image_and_table'] = []
     metadata['keyword'] = []
     
     chapter = post_split(text=chapter)
-    # pattern = r"\b[图|表]\s*\d+-\d+\s+[^，。；！？：“”‘’（）《》&#8203;``【oaicite:0】``&#8203;、\n]*\n" # 提取图和表
-    # matches = re.findall(pattern, chapter)
-    # if matches:
-    #     for match in matches:
-    #         metadata['image_and_table'].append(match.strip())
     for key, value in key_word_dict.items():
         if re.findall(key, chapter):
             metadata['keyword'].append(value)
@@ -74,7 +75,8 @@ def create_documents(chapter, title_stack, title_prefix, metadata: dict) -> List
     #     docs = [Document(page_content=chunk, metadata=deepcopy(metadata)) for chunk in chunks]
     #     return docs
     docs = [Document(page_content=chapter, metadata=deepcopy(metadata))]
-    metadata['image_and_table'] = []
+    metadata['images'] = []
+    metadata['tables'] = []
     return docs
 
 def post_split(text):
@@ -87,7 +89,7 @@ def post_split(text):
     # if title_pos != -1:
     #     text = re.sub(r'\s+', '', text[:title_pos]) + text[title_pos:]
     text = remove_special_chars(text)
-    text = re.sub(r'\<image:.*?\>', '', text)
+    # text = re.sub(r'\<image:.*?\>', '', text)
     text = re.sub(r' {2,}', ' ', text)
     text = re.sub(r' ?\n ?', '\n', text)
     text = re.sub(r'\n{2,}', '\n', text)
@@ -105,6 +107,10 @@ class MrjOCRPDFLoader(UnstructuredFileLoader):
     def __init__(self, file_path: str or List[str], mode: str = "paged", **unstructured_kwargs: Any):
         super().__init__(file_path, mode, **unstructured_kwargs)
         self.text_splitter = ChineseChapterRecursiveSplitter(chunk_size=CHUNK_SIZE, chunk_overlap=OVERLAP_SIZE)
+        self.table_pattern = r"\n\b[表]\s*\d+[^，。；！？：“”‘’;、\n]*\n" # 提取图和表
+        self.image_pattern = r"\n\b[图]\s*\d+[^，。；！？：“”‘’;、\n]*\n"
+        # self.image_pattern = r"\n\b[图]\s*\d+-\d+\s+[^，。；！？：“”‘’（）《》&#8203;``【oaicite:0】``&#8203;、\n]*\n"
+
     def _get_elements(self) -> List:
         # 流式匹配，手动维护标题栈
         def pdf2text(filepath):
@@ -116,7 +122,8 @@ class MrjOCRPDFLoader(UnstructuredFileLoader):
             prev_chapter = chapter
             metadata = dict()
             metadata['content_pos'] = []
-            metadata['image_and_table'] = []
+            metadata['images'] = []
+            metadata['tables'] = []
             loc_dict = {}
             loc_dict['page_no'] = 0
             # 初始化开始和结束的x坐标，为了求一段中开始(结束)值的最值
@@ -138,6 +145,7 @@ class MrjOCRPDFLoader(UnstructuredFileLoader):
                 page_width = page.width
                 page_height = page.height
                 tables = page.find_tables() # 如果没有tables就是[]
+                images = page.images # 留后面可能的图片单独成块功能
                 added_tables = []
                 for line_num, line in enumerate(page.extract_text_lines()):
                     matched = False
@@ -152,10 +160,10 @@ class MrjOCRPDFLoader(UnstructuredFileLoader):
                     x1 = ori_x1/page_width
                     y0 = ori_y0/page_height
                     y1 = ori_y1/page_height
-                    image_and_table_pattern = r"\n\b[图|表]\s*\d+-\d+\s+[^，。；！？：“”‘’（）《》&#8203;``【oaicite:0】``&#8203;、\n]*\n" # 提取图和表
-                    if re.findall(image_and_table_pattern, '\n'+txt+'\n'):
-                        metadata['image_and_table'].append(txt)
-                        continue
+                    if re.findall(self.image_pattern, '\n'+txt+'\n'):
+                        metadata['images'].append(txt)
+                    if re.findall(self.table_pattern, '\n'+txt+'\n'):
+                        metadata['tables'].append(txt)
                     if table_index != -1: # 查找是否在table里
                         if table_index in added_tables:
                             continue
@@ -166,10 +174,12 @@ class MrjOCRPDFLoader(UnstructuredFileLoader):
                             page_num+1,tables[table_index].bbox[2]/page_width,tables[table_index].bbox[3]/page_height
                         loc_dict['left_top']['x'], loc_dict['left_top']['y'] = \
                                 tables[table_index].bbox[0]/page_width,tables[table_index].bbox[1]/page_height
-                        if chapter[:3] == ' [[':
+                        if chapter[:3] == ' [[' and prev_chapter and prev_chapter[-2:] == ']]':
                             chapter = prev_chapter + chapter
                             resp.pop()
-                        metadata['content_pos'].append(deepcopy(loc_dict))
+                            metadata['content_pos'].append(deepcopy(loc_dict)) # 合并跨页表格的坐标
+                        else:
+                            metadata['content_pos'] = [deepcopy(loc_dict)] # 一页内表格的坐标
                         docs = create_documents(chapter=chapter, 
                                             title_stack=title_stack, 
                                             title_prefix=self.text_splitter.title_prefix,
@@ -183,9 +193,11 @@ class MrjOCRPDFLoader(UnstructuredFileLoader):
                         continue
                     loc_dict['left_top']['x'], loc_dict['left_top']['y'] = \
                         min(x0, loc_dict['left_top']['x']), min(y0, loc_dict['left_top']['y'])
+                    
                     for title_level, title in enumerate(title_level_list):
-                        match = re.search(pattern=title, string=txt)
+                        match = is_title(pattern=title, string=txt)
                         if match:
+                            
                             # 手动维护一个标题栈
                             loc_dict['page_no'], loc_dict['right_bottom']['x'], loc_dict['right_bottom']['y'] = \
                                 prev_page_num+1,max(prev_x1, loc_dict['right_bottom']['x']),prev_y1
@@ -206,7 +218,7 @@ class MrjOCRPDFLoader(UnstructuredFileLoader):
                             while len(title_stack) < title_level: # 补齐title_stack到低一级
                                 title_stack.append('')
                             cur_line = txt[match.end():]
-                            title_pos = potential_title_pos(cur_line)
+                            # title_pos = potential_title_pos(cur_line)
                             title_stack.append(cur_line)
                             # chapter += "\n" + cur_line[title_pos:]
                             matched = True
@@ -217,8 +229,11 @@ class MrjOCRPDFLoader(UnstructuredFileLoader):
                             # 因为只有这一种可能会在page结尾append坐标信息，page结尾append的坐标信息必须是
                             # 当前页面左上和右下的坐标，来标记这一整页都被包含
                             loc_dict['page_no'], loc_dict['right_bottom']['x'], loc_dict['right_bottom']['y'] = \
-                                page_num+1,max(x1, loc_dict['right_bottom']['x']), max(y1, loc_dict['right_bottom']['y']) 
-                            chapter += post_split(text=txt) + '\n'
+                                page_num+1,max(x1, loc_dict['right_bottom']['x']), max(y1, loc_dict['right_bottom']['y'])
+                            if prev_txt and prev_txt[-1] == '。':
+                                chapter += '\n' + post_split(text=txt) # 句号结尾加一个换行
+                            else:
+                                chapter += post_split(text=txt) # 否则不换行
                         else:
                             loc_dict['page_no'], loc_dict['right_bottom']['x'], loc_dict['right_bottom']['y'] = \
                                 prev_page_num+1,max(prev_x1, loc_dict['right_bottom']['x']), prev_y1 # chunk size到了要截断，则end y必须是当前位置的y

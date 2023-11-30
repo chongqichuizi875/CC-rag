@@ -60,7 +60,8 @@ def embed_documents(
     """
     temp_texts = [
              (x.metadata['titles'] if 'titles' in x.metadata else '') + # 标题增强
-             (' '.join(x.metadata['image_and_table']) if 'image_and_table' in x.metadata else '') + # 图表增强
+             (' '.join(x.metadata['images']) if 'images' in x.metadata else '') + # 图表增强
+             (' '.join(x.metadata['tables']) if 'tables' in x.metadata else '') + 
              (' '.join(x.metadata['keyword']) if 'keyword' in x.metadata else '') + # 关键词增强
              x.page_content for x in docs]
     
