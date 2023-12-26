@@ -102,15 +102,18 @@ class ChineseChapterRecursiveSplitter(RecursiveCharacterTextSplitter):
                                               r'\b第\s*(?:[一二三四五六七八九十]{1,2}|\d+)\s*[章]', 
                                               r'\b第\s*(?:[一二三四五六七八九十]{1,2}|\d+)\s*[节]', 
                                               r'\b[一二三四五六七八九十]{1,2}[、.]',
-                                              r'\b\d+(?:\.\s+|、\s*)',
-                                              r'\b\d+\.\d+\s+'
+                                              r'^\d+\.\d+[^\.]\s*',
+                                              r'^\d+\.\d+\.\d+[^\.]\s*',
+                                              r'^\d+\.\d+\.\d+\.\d\s*',
+                                            #   r'\b\d+(?:\.\s+|、\s*)',
+                                            #   r'\b\d+\.\d+\s+'
                                             #   r'\b\d+(\.\d+)+\s*'
                                               r'\b\([一二三四五六七八九十]{1,2}\)'
                                               ]
                                             #   r'\n{2,}']
             self._is_separator_regex = is_separator_regex
-            self.title_prefix = "#" # 标记每一层title
-            self.title_split = "**" # 分割titles和paragraph
+            self.title_prefix = "" # 标记每一层title
+            self.title_split = "" # 分割titles和paragraph
     def get_seperators(self):
         return self._separators
 

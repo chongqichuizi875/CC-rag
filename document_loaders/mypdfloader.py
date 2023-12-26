@@ -7,7 +7,7 @@ import re
 import json
 from langchain.docstore.document import Document
 from text_splitter.chinese_chapter_recursive_splitter import ChineseChapterRecursiveSplitter
-from configs.kb_config import CHUNK_SIZE, OVERLAP_SIZE
+from configs.kb_config import CHUNK_SIZE, OVERLAP_SIZE, GLOBAL_INDEX
 from copy import deepcopy
 import os
 
@@ -66,8 +66,12 @@ def create_documents(chapter, title_stack, title_prefix, metadata: dict) -> List
     for key, value in key_word_dict.items():
         if re.findall(key, chapter):
             metadata['keyword'].append(value)
-    
-    if len(chapter) < OVERLAP_SIZE:
+    global GLOBAL_INDEX
+    metadata['global_index'] = GLOBAL_INDEX
+    GLOBAL_INDEX += 1
+    if len(chapter) < 5:
+        return []
+    if "……" in prefix:
         return []
     # if len(chapter) > CHUNK_SIZE:
     #     chunks = [chapter[:CHUNK_SIZE]]
@@ -138,7 +142,7 @@ class MrjOCRPDFLoader(UnstructuredFileLoader):
             title_stack = []
             title_level_list = self.text_splitter.get_seperators()
             txt, x0, y0, x1, y1 = '', 0.1, 0.1, 0.9, 0.9
-            for page_num in range(len(pages)):
+            for page_num in range(2, len(pages)):
                 b_unit.set_description("MrjOCRPDFLoader context page index: {}".format(page_num))
                 b_unit.refresh()
                 page = pages[page_num]
@@ -341,6 +345,6 @@ class RapidOCRPDFLoader(UnstructuredFileLoader):
 
 
 if __name__ == "__main__":
-    loader = MrjOCRPDFLoader(file_path="/home/cc007/cc/Langchain-Chatchat/knowledge_base/test/content/陕汽-重卡X5000维修手册（第一部分）.pdf")
+    loader = MrjOCRPDFLoader(file_path="document_loaders/重型卡车维修技术手册底盘分册_OCR版(1).pdf")
     docs = loader.load()
     # print(docs)

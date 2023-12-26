@@ -4,6 +4,7 @@ from server.model_workers.base import ApiEmbeddingsParams
 from server.utils import BaseResponse, get_model_worker_config, list_embed_models, list_online_embed_models
 from fastapi import Body
 from typing import Dict, List
+import re
 
 
 online_embed_models = list_online_embed_models()
@@ -58,12 +59,16 @@ def embed_documents(
     """
     将 List[Document] 向量化，转化为 VectorStore.add_embeddings 可以接受的参数
     """
+    def remove_tables(content):
+        match = re.search(r'\[\[', content[2])
+        return content[:match.start()] if match else content
     temp_texts = [
              (x.metadata['titles'] if 'titles' in x.metadata else '') + # 标题增强
              (' '.join(x.metadata['images']) if 'images' in x.metadata else '') + # 图表增强
-             (' '.join(x.metadata['tables']) if 'tables' in x.metadata else '') + 
-             (' '.join(x.metadata['keyword']) if 'keyword' in x.metadata else '') + # 关键词增强
-             x.page_content for x in docs]
+             (' '.join(x.metadata['tables']) if 'tables' in x.metadata else '') +
+            #  (' '.join(x.metadata['keyword']) if 'keyword' in x.metadata else '')  # 关键词增强
+             remove_tables(x.page_content) 
+             for x in docs]
     
     texts = [x.page_content for x in docs]
     metadatas = [x.metadata for x in docs]

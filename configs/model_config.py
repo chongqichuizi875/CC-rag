@@ -7,7 +7,7 @@ import os
 MODEL_ROOT_PATH = "/mnt/ddata/models"
 
 # 选用的 Embedding 名称
-EMBEDDING_MODEL = "m3e-base" # bge-large-zh  
+EMBEDDING_MODEL = "bge-large-zh-v2" # bge-large-zh-v1.5
 
 # Embedding 模型运行设备。设为"auto"会自动检测，也可手动设定为"cuda","mps","cpu"其中之一。
 EMBEDDING_DEVICE = "auto"
@@ -143,7 +143,8 @@ MODEL_PATH = {
         "bge-large-zh": "BAAI/bge-large-zh",
         "bge-large-zh-noinstruct": "BAAI/bge-large-zh-noinstruct",
         "bge-base-zh-v1.5": "BAAI/bge-base-zh-v1.5",
-        "bge-large-zh-v1.5": "BAAI/bge-large-zh-v1.5",
+        "bge-large-zh-v1.5": "bge-large-zh-v1.5",
+        "bge-large-zh-v2": "bge-large-zh-v2",
         "piccolo-base-zh": "sensenova/piccolo-base-zh",
         "piccolo-large-zh": "sensenova/piccolo-large-zh",
         "text-embedding-ada-002": "your OPENAI_API_KEY",
